@@ -5,7 +5,9 @@ The views are written in SwiftUI.
 
 ### How to build
 1, Download or Clone this project and open in xcode.
+
 2, Please change the "Team" field of xcode Signing and Capabilities to your account.
+
 3, Build in your actual device. This project can not be used in Simulators.
 
 ### Content
