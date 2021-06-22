@@ -52,4 +52,4 @@ Freelance iOS programmer from Japan.
 PROFILES:
 WORKS:
 BLOGS:
-CONTACTS:
+CONTACTS: rockyshikoku@gmail.com
