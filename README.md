@@ -42,3 +42,14 @@ Multi Device AR Game.
 | ------------- | ------------- |
 | Just put the box  | ARView in SwiftUI, Scene, Entity, Anchor, MeshResource, Material.  |
 | 100-inch monitor  | VideoMaterial, SceneEvent  |
+
+
+## Author
+
+Daisuke Majima
+Freelance iOS programmer from Japan.
+
+PROFILES:
+WORKS:
+BLOGS:
+CONTACTS:
