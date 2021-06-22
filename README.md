@@ -31,6 +31,6 @@ Visualize facial expressions and what you say.
 
 Interact body and AR object. With CoreML.
 
-### Shot Opponent Device
+### Shoot Opponent Device
 
 Multi Device AR Game.
