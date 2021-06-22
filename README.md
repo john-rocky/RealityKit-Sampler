@@ -47,9 +47,15 @@ Multi Device AR Game.
 ## Author
 
 Daisuke Majima
+
 Freelance iOS programmer from Japan.
 
 PROFILES:
+
 WORKS:
+
 BLOGS:
+
 CONTACTS: rockyshikoku@gmail.com
+
+## Special Thanks
