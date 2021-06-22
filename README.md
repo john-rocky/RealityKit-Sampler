@@ -9,7 +9,7 @@ RealityKitSampler is the sample　collection of the basic functions of RealityKi
 
 3, Build in your actual device. This project can not be used in Simulators.
 
-## Content
+## Contents
 
 ### Just put the box
 The simplest way to use the ModelEntity and AnchorEntity.
@@ -40,5 +40,5 @@ Multi Device AR Game.
 
 | Content | Technical Elements |
 | ------------- | ------------- |
-| Just put the box  | ARView, Scene, Entity, Anchor, MeshResource, Material.  |
+| Just put the box  | ARView in SwiftUI, Scene, Entity, Anchor, MeshResource, Material.  |
 | 100-inch monitor  | VideoMaterial, SceneEvent  |
