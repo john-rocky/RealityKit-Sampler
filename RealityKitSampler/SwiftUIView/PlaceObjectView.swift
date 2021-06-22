@@ -12,7 +12,7 @@ struct PlaceObjectView: View {
     @State private var tappedLocation: CGPoint = .zero
     
     var body: some View {
-        return ARViewContainer(tappedLocation: $tappedLocation)
+        ARContainerView(tappedLocation: $tappedLocation)
             .edgesIgnoringSafeArea(.all)
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local).onEnded({ value in
@@ -21,13 +21,22 @@ struct PlaceObjectView: View {
     }
 }
 
+struct ARContainerView: View {
+    @Binding var tappedLocation: CGPoint
+    var body: some View {
+        return ARViewContainer(tappedLocation: $tappedLocation)
+            .edgesIgnoringSafeArea(.all)
+    }
+}
+
+
 struct ARViewContainer: UIViewRepresentable {
     @Binding var tappedLocation: CGPoint
     
     func update(angles:simd_float3) {
         
     }
-        
+    
     func makeUIView(context: Context) -> PlacingObjectARView {
         let arView = PlacingObjectARView(frame: .zero,settings: "")
         

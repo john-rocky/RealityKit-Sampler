@@ -13,12 +13,14 @@ struct OneHundredInchMonitorView: View {
     
     var body: some View {
         ZStack {
-            TwoHundredInchMonitorContainerView(didTap: $didTap)
-            Button(action: didTapButton, label: {
-                Text("Select Video")
-                    .font(.headline)
-                    .position(CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.maxY - 90))
-            })
+            OneHundredInchMonitorContainerView(didTap: $didTap)
+            VStack {
+                Spacer()
+                Button(action: didTapButton, label: {
+                    Text("Select Video")
+                        .font(.system(size: 32, weight: .bold, design: .default))
+                })
+            }
         }
     }
     
@@ -27,29 +29,29 @@ struct OneHundredInchMonitorView: View {
     }
 }
 
-struct TwoHundredInchMonitorContainerView: View {
+struct OneHundredInchMonitorContainerView: View {
     @Binding var didTap:Bool
     var body: some View {
-        return TwoHundredInchMonitorARViewContainer(didTap: $didTap)
+        return OneHundredInchMonitorARViewContainer(didTap: $didTap)
             .edgesIgnoringSafeArea(.all)
     }
 }
 
-struct TwoHundredInchMonitorARViewContainer: UIViewControllerRepresentable {
+struct OneHundredInchMonitorARViewContainer: UIViewControllerRepresentable {
     @Binding var didTap:Bool
 
-    func makeUIViewController(context: UIViewControllerRepresentableContext<TwoHundredInchMonitorARViewContainer>) -> OneHundredInchMonitorARViewController {
+    func makeUIViewController(context: UIViewControllerRepresentableContext<OneHundredInchMonitorARViewContainer>) -> OneHundredInchMonitorARViewController {
         let viewController = OneHundredInchMonitorARViewController(didTap: $didTap)
         return viewController
     }
 
-    func updateUIViewController(_ uiViewController: OneHundredInchMonitorARViewController, context: UIViewControllerRepresentableContext<TwoHundredInchMonitorARViewContainer>) {
+    func updateUIViewController(_ uiViewController: OneHundredInchMonitorARViewController, context: UIViewControllerRepresentableContext<OneHundredInchMonitorARViewContainer>) {
         if didTap {
             uiViewController.showPicker()
         }
     }
     
-    func makeCoordinator() -> TwoHundredInchMonitorARViewContainer.Coordinator {
+    func makeCoordinator() -> OneHundredInchMonitorARViewContainer.Coordinator {
         return Coordinator()
     }
     
