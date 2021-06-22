@@ -9,13 +9,17 @@ import UIKit
 import SwiftUI
 import RealityKit
 import AVFoundation
+import Combine
 
 class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    private var videoLooper: AVPlayerLooper?
+    private var videoLooper: AVPlayerLooper!
     private var arView: ARView!
     private var player: AVQueuePlayer!
-    private var planeEntity: ModelEntity!
+    private var displayEntity: ModelEntity!
+    private var anchorEntity: AnchorEntity!
+    private var isActiveSub:Cancellable!
+    
     @Binding var didTap:Bool
     
     init(didTap:Binding<Bool>) {
@@ -33,28 +37,37 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
         view.addSubview(arView)
         addMonitorEntity()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        player.pause()
+    }
 
     func addMonitorEntity() {
-        let anchorEntity = AnchorEntity(world: [0,0,-1])
-        let boxEntity = ModelEntity(mesh: .generateBox(size: [2.21,1.24,0.05,],cornerRadius: 0.02))
-        let material = SimpleMaterial(color: .black, isMetallic: true)
-        boxEntity.model?.materials = [material]
-        
-        planeEntity = ModelEntity(mesh: .generatePlane(width: 2, depth: 1))
-        planeEntity.position = [0,0,0.026]
-        planeEntity.orientation = simd_quatf(angle: 90 * .pi / 180 , axis: [1,0,0])
-        
+        anchorEntity = AnchorEntity(plane: .vertical)
+//        let boxEntity = ModelEntity(mesh: .generateBox(size: [2.31,0.05,1.34],cornerRadius: 0.02))
+//        let material = SimpleMaterial(color: .black, isMetallic: true)
+//        boxEntity.model?.materials = [material]
+
+        displayEntity = ModelEntity(mesh: .generateBox(size: [2.21,0.2,1.24],cornerRadius: 0.02))
+        displayEntity.position = [0,0,0.03]
+
         if let videoURL = Bundle.main.url(forResource: "windChimes", withExtension: "mp4") {
             let asset = AVURLAsset(url: videoURL)
             let playerItem = AVPlayerItem(asset: asset)
             player = AVQueuePlayer(playerItem: playerItem)
             videoLooper = AVPlayerLooper(player: player, templateItem: playerItem)
             let videoMaterial = VideoMaterial(avPlayer: player)
-            planeEntity.model?.materials = [videoMaterial]
-            player.play()
+            displayEntity.model?.materials = [videoMaterial]
         }
-        boxEntity.addChild(planeEntity)
-        anchorEntity.addChild(boxEntity)
+        anchorEntity.addChild(displayEntity)
+        
+        isActiveSub = arView.scene.subscribe(to: SceneEvents.AnchoredStateChanged.self, on: anchorEntity, { event in
+            if event.isAnchored {
+                self.player.play()
+            }
+        })
+        
         arView.scene.addAnchor(anchorEntity)
     }
     
@@ -75,7 +88,7 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
             player = AVQueuePlayer(playerItem: playerItem)
             videoLooper = AVPlayerLooper(player: player, templateItem: playerItem)
             let videoMaterial = VideoMaterial(avPlayer: player)
-            planeEntity.model?.materials = [videoMaterial]
+            displayEntity.model?.materials = [videoMaterial]
             player.play()
         }
         picker.dismiss(animated: true, completion: nil)
@@ -84,12 +97,5 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
+    
 }

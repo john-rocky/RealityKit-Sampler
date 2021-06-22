@@ -17,6 +17,7 @@ struct OneHundredInchMonitorView: View {
             Button(action: didTapButton, label: {
                 Text("Select Video")
                     .font(.headline)
+                    .position(CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.maxY - 90))
             })
         }
     }
