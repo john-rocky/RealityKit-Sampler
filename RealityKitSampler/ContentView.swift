@@ -19,7 +19,12 @@ struct ContentView: View {
                         Text("Just Place A Box")
                     })
                 NavigationLink(
-                    destination: PlacingObjectView(),
+                    destination: OneHundredInchMonitorView(),
+                    label: {
+                        Text("100-inch Monitor")
+                    })
+                NavigationLink(
+                    destination: PlaceObjectView(),
                     label: {
                         Text("Place Objects")
                     })

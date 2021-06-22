@@ -16,7 +16,10 @@
 		73F0ACFD2680408400199348 /* PlacingObjectARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACFC2680408400199348 /* PlacingObjectARView.swift */; };
 		73F0ACFF26806ABC00199348 /* PlacingObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACFE26806ABC00199348 /* PlacingObjectModel.swift */; };
 		73F0AD012680C47F00199348 /* JustPlaceBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0AD002680C47F00199348 /* JustPlaceBoxView.swift */; };
-		73F0AD032680C4CB00199348 /* PlacingObjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0AD022680C4CB00199348 /* PlacingObjectView.swift */; };
+		73F0AD032680C4CB00199348 /* PlaceObjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0AD022680C4CB00199348 /* PlaceObjectView.swift */; };
+		73F0AD052681441C00199348 /* OneHundredInchMonitorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0AD042681441C00199348 /* OneHundredInchMonitorView.swift */; };
+		73F0AD0726814AFD00199348 /* windChimes.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 73F0AD0626814AEB00199348 /* windChimes.mp4 */; };
+		73F0AD092681730200199348 /* OneHundredInchMonitorARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0AD082681730200199348 /* OneHundredInchMonitorARViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,7 +55,10 @@
 		73F0ACFC2680408400199348 /* PlacingObjectARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacingObjectARView.swift; sourceTree = "<group>"; };
 		73F0ACFE26806ABC00199348 /* PlacingObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacingObjectModel.swift; sourceTree = "<group>"; };
 		73F0AD002680C47F00199348 /* JustPlaceBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JustPlaceBoxView.swift; sourceTree = "<group>"; };
-		73F0AD022680C4CB00199348 /* PlacingObjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacingObjectView.swift; sourceTree = "<group>"; };
+		73F0AD022680C4CB00199348 /* PlaceObjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceObjectView.swift; sourceTree = "<group>"; };
+		73F0AD042681441C00199348 /* OneHundredInchMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneHundredInchMonitorView.swift; sourceTree = "<group>"; };
+		73F0AD0626814AEB00199348 /* windChimes.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = windChimes.mp4; sourceTree = "<group>"; };
+		73F0AD082681730200199348 /* OneHundredInchMonitorARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneHundredInchMonitorARViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,10 +111,10 @@
 			children = (
 				73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */,
 				73F0ACD326803FE900199348 /* ContentView.swift */,
-				73F0AD022680C4CB00199348 /* PlacingObjectView.swift */,
-				73F0AD002680C47F00199348 /* JustPlaceBoxView.swift */,
-				73F0ACFC2680408400199348 /* PlacingObjectARView.swift */,
+				73F0AD0A26817AAE00199348 /* SwiftUIView */,
+				73F0AD0B26817AE100199348 /* UIKitView */,
 				73F0ACFE26806ABC00199348 /* PlacingObjectModel.swift */,
+				73F0AD0626814AEB00199348 /* windChimes.mp4 */,
 				73F0ACD526803FEB00199348 /* Assets.xcassets */,
 				73F0ACDA26803FEB00199348 /* Info.plist */,
 				73F0ACD726803FEB00199348 /* Preview Content */,
@@ -140,6 +146,25 @@
 				73F0ACF026803FEB00199348 /* Info.plist */,
 			);
 			path = RealityKitSamplerUITests;
+			sourceTree = "<group>";
+		};
+		73F0AD0A26817AAE00199348 /* SwiftUIView */ = {
+			isa = PBXGroup;
+			children = (
+				73F0AD002680C47F00199348 /* JustPlaceBoxView.swift */,
+				73F0AD042681441C00199348 /* OneHundredInchMonitorView.swift */,
+				73F0AD022680C4CB00199348 /* PlaceObjectView.swift */,
+			);
+			path = SwiftUIView;
+			sourceTree = "<group>";
+		};
+		73F0AD0B26817AE100199348 /* UIKitView */ = {
+			isa = PBXGroup;
+			children = (
+				73F0AD082681730200199348 /* OneHundredInchMonitorARViewController.swift */,
+				73F0ACFC2680408400199348 /* PlacingObjectARView.swift */,
+			);
+			path = UIKitView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,6 +270,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73F0AD0726814AFD00199348 /* windChimes.mp4 in Resources */,
 				73F0ACD926803FEB00199348 /* Preview Assets.xcassets in Resources */,
 				73F0ACD626803FEB00199348 /* Assets.xcassets in Resources */,
 			);
@@ -271,11 +297,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73F0AD032680C4CB00199348 /* PlacingObjectView.swift in Sources */,
+				73F0AD092681730200199348 /* OneHundredInchMonitorARViewController.swift in Sources */,
+				73F0AD032680C4CB00199348 /* PlaceObjectView.swift in Sources */,
 				73F0ACFD2680408400199348 /* PlacingObjectARView.swift in Sources */,
 				73F0AD012680C47F00199348 /* JustPlaceBoxView.swift in Sources */,
 				73F0ACFF26806ABC00199348 /* PlacingObjectModel.swift in Sources */,
 				73F0ACD426803FE900199348 /* ContentView.swift in Sources */,
+				73F0AD052681441C00199348 /* OneHundredInchMonitorView.swift in Sources */,
 				73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

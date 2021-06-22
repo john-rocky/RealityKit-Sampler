@@ -8,7 +8,7 @@
 import SwiftUI
 import RealityKit
 
-struct PlacingObjectView: View {
+struct PlaceObjectView: View {
     @State private var tappedLocation: CGPoint = .zero
     
     var body: some View {
@@ -41,6 +41,6 @@ struct ARViewContainer: UIViewRepresentable {
 
 struct PlacingObjectView_Previews: PreviewProvider {
     static var previews: some View {
-        PlacingObjectView()
+        PlaceObjectView()
     }
 }
