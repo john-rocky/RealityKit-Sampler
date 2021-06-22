@@ -34,3 +34,11 @@ Interact body and AR object. With CoreML.
 ### Shoot Opponent Device
 
 Multi Device AR Game.
+
+
+## What you can learn
+
+| Content | Technical Elements |
+| ------------- | ------------- |
+| Just put the box  | ARView, Scene, Entity, Anchor, MeshResource, Material.  |
+| 100-inch monitor  | VideoMaterial, SceneEvent  |
