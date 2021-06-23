@@ -9,14 +9,14 @@ import Foundation
 import UIKit
 
 struct PlacingObjectModel {
-    enum MeshType {
+    enum MeshType: String, CaseIterable, Identifiable {
         case box
+        case plane
         case sphere
-        case text
+        
+        var id: String { self.rawValue }
     }
     
     var meshType: MeshType = .box
-    var color: UIColor = .white
-    
-    
+    var color: UIColor = .white    
 }
