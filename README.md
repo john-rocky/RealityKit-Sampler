@@ -42,7 +42,7 @@ Multi Device AR Game.
 | ------------- | ------------- |
 | Just put the box  | ARView in SwiftUI, Scene, Entity, Anchor, MeshResource, Material.  |
 | 100-inch monitor  | VideoMaterial, SceneEvent  |
-
+| Tap and Drag | Ray Cast, Hit Test, Handle Gestures, TextureResource |
 
 ## Author
 
