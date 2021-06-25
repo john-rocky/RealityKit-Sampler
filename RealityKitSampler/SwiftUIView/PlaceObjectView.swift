@@ -13,6 +13,8 @@ struct PlaceObjectView: View {
     @State private var model = PlacingObjectModel()
     @State private var meshMenuText = "Mesh:Box"
     @State private var color = Color(.white)
+    @State var showImagePicker: Bool = false
+    @State var showMoviePicker: Bool = false
 
     var body: some View {
         
@@ -26,50 +28,82 @@ struct PlaceObjectView: View {
                 
                 HStack {
                     VStack(spacing: -20) {
+                        
                         Text("Mesh")
                             .font(.headline)
                         Picker("", selection: $model.meshType) {
                             Text(PlacingObjectModel.MeshType.box.rawValue).tag(PlacingObjectModel.MeshType.box)
+                                .foregroundColor(.white)
                             Text(PlacingObjectModel.MeshType.plane.rawValue).tag(PlacingObjectModel.MeshType.plane)
+                                .foregroundColor(.white)
                             Text(PlacingObjectModel.MeshType.sphere.rawValue).tag(PlacingObjectModel.MeshType.sphere)
+                                .foregroundColor(.white)
+
                         }
                         .frame(width: 70)
                         .clipped()
                         
                     }
-//                    Menu(meshMenuText) {
-//                        Button("Box",action:{
-//                            meshMenuText = "Mesh:Box"
-//                            model.meshType = .box
-//                        })
-//                        Button("Plane",action:{
-//                            meshMenuText = "Mesh:Plane"
-//                            model.meshType = .plane
-//                        })
-//                        Button("Sphere",action:{
-//                            meshMenuText = "Mesh:Sphere"
-//                            model.meshType = .sphere
-//                        })
-//                    }
-                    Menu("Material:") {
-                        Button("SimpleColor",action:{
-                            print(color)
-                        })
-                        Button("Image",action:{})
-                        Button("Video",action:{})
-                        Button("Occlusion",action:{})
+                    
+                    Text("Material")
+                        .font(.headline)
+                    Picker("", selection: $model.materialType) {
+                        Text(PlacingObjectModel.MaterialType.simple.rawValue).tag(PlacingObjectModel.MaterialType.simple)
+                        Text(PlacingObjectModel.MaterialType.unlit.rawValue).tag(PlacingObjectModel.MaterialType.unlit)
+                        Text(PlacingObjectModel.MaterialType.image.rawValue).tag(PlacingObjectModel.MaterialType.image)
+                        Text(PlacingObjectModel.MaterialType.video.rawValue).tag(PlacingObjectModel.MaterialType.video)
+                        Text(PlacingObjectModel.MaterialType.occlusion.rawValue).tag(PlacingObjectModel.MaterialType.occlusion)
                     }
-                    ColorPicker("", selection: $color)
-                        .frame(width: 50, height: 50, alignment:.center)
-                        .onChange(of: color) { _color in
-                            model.color = UIColor(_color)
+                    .frame(width: 70)
+                    .clipped()
+                    
+                    switch model.materialType {
+                    case .image:
+                        Button(action: {
+                            showImagePicker.toggle()
+                        }) {
+                            Image(uiImage: self.model.image ?? UIImage())
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50, alignment:.center)
                         }
+                        .frame(width: 50, height: 50, alignment:.center)
+                    case .video:
+                        Button(action: {
+                            showMoviePicker.toggle()
+                        }) {
+                            Image(uiImage:UIImage(systemName: "play.rectangle.fill") ?? UIImage())
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50, alignment:.center)
+                        }
+                        .frame(width: 50, height: 50, alignment:.center)
+                    default:
+                        ColorPicker("", selection: $color)
+                            .frame(width: 50, height: 50, alignment:.center)
+                            .onChange(of: color) { _color in
+                                model.color = UIColor(_color)
+                            }
+                            .labelsHidden()
+                    }
+                    
                     Menu("Physics") {
                         Button("false",action:{})
                         Button("true",action:{})
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePickerView(sourceType: .photoLibrary, mediaType: "public.image") { image,url in
+                        self.model.image = image
+                        self.model.imageURL = url
+                    }
+        }
+        .sheet(isPresented: $showMoviePicker) {
+            ImagePickerView(sourceType: .photoLibrary, mediaType: "public.movie") { image,url in
+                        self.model.videoURL = url
+                    }
         }
     }
 }
