@@ -28,10 +28,15 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     var model:PlacingObjectModel!
     var resolution:CGAffineTransform?
     var modelEntities: [ModelEntity] = []
+    var planeEntities: [UUID:ModelEntity] = [:]
     
     init(frame: CGRect, model: PlacingObjectModel) {
         super.init(frame: frame)
         self.model = model
+        session.delegate = self
+        let config = ARWorldTrackingConfiguration()
+        config.planeDetection = [.horizontal,.vertical]
+        session.run(config, options: [])
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapped(sender:)))
         self.addGestureRecognizer(tapGesture)
     }
@@ -43,19 +48,17 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     required init(frame frameRect: CGRect) {
         fatalError("init(frame:) has not been implemented")
     }
-
+    
     @objc func tapped(sender: UITapGestureRecognizer){
         let location = sender.location(in: self)
-        let results = self.raycast(from: location, allowing: .estimatedPlane, alignment: .any)
-        if let firstResult = results.first {
-            let anchor = ARAnchor(name: "Anchor for object placement", transform: firstResult.worldTransform)
-            self.session.add(anchor: anchor)
-            let anchorEntity = AnchorEntity(anchor: anchor)
+        if let entity = self.entity(at: location) as? ModelEntity, !planeEntities.values.contains(entity) {
             let modelEntity = ModelEntity(mesh: generateMesh())
             modelEntity.model?.materials = [generateMaterial()]
-            anchorEntity.addChild(modelEntity)
-            modelEntities.append(modelEntity)
-            
+            modelEntity.position = entity.position
+            modelEntity.position.y += (modelEntity.model?.mesh.bounds.extents.y)! / 2
+            if physics {
+                modelEntity.addPhysicsBody()
+            }
             if model.materialType == .video {
                 if resolution!.b != 0{
                     modelEntity.orientation = simd_quatf(angle: -1.5708, axis: [0,0,1])
@@ -63,10 +66,38 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                     modelEntity.orientation = simd_quatf(angle: 1.5708 * 2, axis: [0,0,1])
                 }
             }
-            
-            self.scene.addAnchor(anchorEntity)
+            modelEntities.append(modelEntity)
+
+            entity.parent?.addChild(modelEntity)
+
+        } else {
+            let results = self.raycast(from: location, allowing: .estimatedPlane, alignment: .any)
+            if let firstResult = results.first {
+                let anchor = ARAnchor(name: "Anchor for object placement", transform: firstResult.worldTransform)
+                self.session.add(anchor: anchor)
+                let anchorEntity = AnchorEntity(anchor: anchor)
+                let modelEntity = ModelEntity(mesh: generateMesh())
+                modelEntity.model?.materials = [generateMaterial()]
+                anchorEntity.addChild(modelEntity)
+                modelEntities.append(modelEntity)
+                if physics {
+                    modelEntity.addPhysicsBody()
+                }
+                if model.materialType == .video {
+                    if resolution!.b != 0{
+                        modelEntity.orientation = simd_quatf(angle: -1.5708, axis: [0,0,1])
+                    } else if resolution!.a != 1.0 {
+                        modelEntity.orientation = simd_quatf(angle: 1.5708 * 2, axis: [0,0,1])
+                    }
+                }
+                
+                modelEntity.position.y = (modelEntity.model?.mesh.bounds.extents.y)! / 2
+                self.scene.addAnchor(anchorEntity)
+            }
         }
     }
+    
+    
     
     func generateMesh() -> MeshResource {
         var mesh:MeshResource
@@ -185,7 +216,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     
     func addPhysics() {
         for modelEntity in modelEntities {
-            modelEntity.physicsBody = PhysicsBodyComponent()
+            modelEntity.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
             modelEntity.generateCollisionShapes(recursive: false)
         }
     }
@@ -203,9 +234,38 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     
     
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        for anchor in anchors {
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
+            let plane = ModelEntity(mesh: .generatePlane(width: planeAnchor.extent.x, depth: planeAnchor.extent.z))
+            plane.model?.materials = [OcclusionMaterial()]
+            plane.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .generate(), mode: .static)
+            plane.generateCollisionShapes(recursive: false)
+            plane.position.y = -0.02
+            let anchorEntity = AnchorEntity(anchor: planeAnchor)
+            anchorEntity.addChild(plane)
+            planeEntities[planeAnchor.identifier] = plane
+            self.scene.addAnchor(anchorEntity)
+        }
+    }
+    
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        for anchor in anchors {
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
+            guard let modelExtents = planeEntities[planeAnchor.identifier]?.model?.mesh.bounds.extents else { continue }
+            let scaleX = planeAnchor.extent.x / modelExtents.x
+            let scaleZ = planeAnchor.extent.z / modelExtents.z
+            planeEntities[planeAnchor.identifier]?.scale = [scaleX,1,scaleZ]
+        }
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
     }
 
+}
+
+extension ModelEntity {
+    func addPhysicsBody() {
+        physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
+        generateCollisionShapes(recursive: false)
+    }
 }

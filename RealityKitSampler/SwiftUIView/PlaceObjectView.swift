@@ -44,18 +44,24 @@ struct PlaceObjectView: View {
                         .clipped()
                         
                     }
-                    
+                    VStack(spacing: -20) {
                     Text("Material")
                         .font(.headline)
                     Picker("", selection: $model.materialType) {
                         Text(PlacingObjectModel.MaterialType.simple.rawValue).tag(PlacingObjectModel.MaterialType.simple)
+                            .foregroundColor(.white)
                         Text(PlacingObjectModel.MaterialType.unlit.rawValue).tag(PlacingObjectModel.MaterialType.unlit)
+                            .foregroundColor(.white)
                         Text(PlacingObjectModel.MaterialType.image.rawValue).tag(PlacingObjectModel.MaterialType.image)
+                            .foregroundColor(.white)
                         Text(PlacingObjectModel.MaterialType.video.rawValue).tag(PlacingObjectModel.MaterialType.video)
+                            .foregroundColor(.white)
                         Text(PlacingObjectModel.MaterialType.occlusion.rawValue).tag(PlacingObjectModel.MaterialType.occlusion)
+                            .foregroundColor(.white)
                     }
                     .frame(width: 70)
                     .clipped()
+                    }
                     
                     switch model.materialType {
                     case .image:
@@ -86,9 +92,16 @@ struct PlaceObjectView: View {
                             }
                             .labelsHidden()
                     }
-                    Picker("", selection: $physics) {
-                        Text("false").tag(false)
-                        Text("true").tag(true)
+                    VStack(spacing: -20) {
+                        Text("Physics")
+                        Picker("", selection: $physics) {
+                            Text("false").tag(false)
+                                .foregroundColor(.white)
+                            Text("true").tag(true)
+                                .foregroundColor(.white)
+                        }
+                        .frame(width: 70)
+                        .clipped()
                     }
                 }
             }
