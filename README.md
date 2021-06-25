@@ -31,6 +31,10 @@ Visualize facial expressions and what you say.
 
 Interact body and AR object. With CoreML.
 
+### Light Apple 
+
+The apple mark glows.
+
 ### Shoot Opponent Device
 
 Multi Device AR Game.
@@ -42,7 +46,11 @@ Multi Device AR Game.
 | ------------- | ------------- |
 | Just put the box  | ARView in SwiftUI, Scene, Entity, Anchor, MeshResource, Material.  |
 | 100-inch monitor  | VideoMaterial, SceneEvent  |
-| Tap and Drag | Ray Cast, Hit Test, Handle Gestures, TextureResource |
+| Tap and Drag | Ray Cast, Hit Test, Handle Gestures, Physics, Collision, TextureResource, ARSessionDelegate |
+| Expressions and Speech | Face Anchor|
+| Kill Move | Body Anchor |
+| Light Apple | Image Anchor |
+| Multi Device AR Game | Collaborate Session |
 
 ## Author
 
