@@ -9,7 +9,7 @@ import SwiftUI
 import RealityKit
 
 struct PlaceObjectView: View {
-    @State private var tappedLocation: CGPoint = .zero
+    @State private var physics: Bool = false
     @State private var model = PlacingObjectModel()
     @State private var meshMenuText = "Mesh:Box"
     @State private var color = Color(.white)
@@ -19,7 +19,7 @@ struct PlaceObjectView: View {
     var body: some View {
         
         ZStack {
-            ARContainerView(tappedLocation: $tappedLocation, model: $model)
+            ARContainerView(physics: $physics, model: $model)
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
@@ -86,10 +86,9 @@ struct PlaceObjectView: View {
                             }
                             .labelsHidden()
                     }
-                    
-                    Menu("Physics") {
-                        Button("false",action:{})
-                        Button("true",action:{})
+                    Picker("", selection: $physics) {
+                        Text("false").tag(false)
+                        Text("true").tag(true)
                     }
                 }
             }
@@ -109,17 +108,17 @@ struct PlaceObjectView: View {
 }
 
 struct ARContainerView: View {
-    @Binding var tappedLocation: CGPoint
+    @Binding var physics: Bool
     @Binding var model:PlacingObjectModel
     var body: some View {
-        return ARViewContainer(tappedLocation: $tappedLocation,model: $model)
+        return ARViewContainer(physics: $physics,model: $model)
             .edgesIgnoringSafeArea(.all)
     }
 }
 
 
 struct ARViewContainer: UIViewRepresentable {
-    @Binding var tappedLocation: CGPoint
+    @Binding var physics: Bool
     @Binding var model:PlacingObjectModel
 
     func update(angles:simd_float3) {
@@ -133,7 +132,7 @@ struct ARViewContainer: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: PlacingObjectARView, context: Context) {
-        uiView.tappedLocation = tappedLocation
+        uiView.physics = physics
         uiView.model = model
     }
 }

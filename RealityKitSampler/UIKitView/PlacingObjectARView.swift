@@ -13,15 +13,21 @@ import AVFoundation
 
 class PlacingObjectARView: ARView, ARSessionDelegate {
     
-    var tappedLocation: CGPoint = CGPoint.zero {
+    var physics: Bool = false {
         didSet {
-            print(tappedLocation)
+            print(physics)
             print(model.meshType)
+            if physics {
+                addPhysics()
+            } else {
+                removePhysics()
+            }
         }
     }
     
     var model:PlacingObjectModel!
     var resolution:CGAffineTransform?
+    var modelEntities: [ModelEntity] = []
     
     init(frame: CGRect, model: PlacingObjectModel) {
         super.init(frame: frame)
@@ -48,6 +54,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
             let modelEntity = ModelEntity(mesh: generateMesh())
             modelEntity.model?.materials = [generateMaterial()]
             anchorEntity.addChild(modelEntity)
+            modelEntities.append(modelEntity)
             
             if model.materialType == .video {
                 if resolution!.b != 0{
@@ -71,7 +78,8 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                 mesh = .generateBox(size: [size.0,size.1,size.1])
             case .video:
                 let size = getBoxSizeForVideo()
-                mesh = .generateBox(size: [size.0,size.1,size.0])
+                let z = min(size.0, size.1)
+                mesh = .generateBox(size: [size.0,size.1,z])
             default:
                 mesh = .generateBox(size: 0.05)
             }
@@ -173,6 +181,20 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     @objc func didPlayToEnd(notification: NSNotification) {
         let item: AVPlayerItem = notification.object as! AVPlayerItem
         item.seek(to: CMTime.zero, completionHandler: nil)
+    }
+    
+    func addPhysics() {
+        for modelEntity in modelEntities {
+            modelEntity.physicsBody = PhysicsBodyComponent()
+            modelEntity.generateCollisionShapes(recursive: false)
+        }
+    }
+    
+    func removePhysics() {
+        for modelEntity in modelEntities {
+            modelEntity.physicsBody = nil
+            modelEntity.collision = nil
+        }
     }
     
     func setup() {
