@@ -11,7 +11,7 @@ import ARKit
 import Speech
 import AVFoundation
 
-class ExpressionsAndSpeechARView: ARView {
+class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
 
     private var speechBalloon:Entity!
     
@@ -134,14 +134,19 @@ class ExpressionsAndSpeechARView: ARView {
         print(speechText.count)
         var currentText = speechText
         switch speechText.count {
-        case 5...10 :
-            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 5))
+        case 21...40 :
+            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 20))
             updateSpeechText(speechText: currentText)
-        case 11...15 :
-            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 5))
-            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 10))
+        case 41...60 :
+            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 20))
+            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 40))
             updateSpeechText(speechText: currentText)
-        case 16...:
+        case 61...80 :
+            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 20))
+            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 40))
+            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 60))
+            updateSpeechText(speechText: currentText)
+        case 81...:
             self.audioEngine?.stop()
             self.inputNode?.removeTap(onBus: 0)
             recognitionTask?.cancel()
@@ -166,7 +171,11 @@ class ExpressionsAndSpeechARView: ARView {
                                            alignment: .left,
                                            lineBreakMode: .byCharWrapping)
         text.components.set(textComponent)
-
     }
-
+    
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        for anchor in anchors {
+            
+        }
+    }
 }
