@@ -27,18 +27,28 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     
     var model:PlacingObjectModel!
     var resolution:CGAffineTransform?
-    var modelEntities: [ModelEntity] = []
-    var planeEntities: [UUID:ModelEntity] = [:]
+    private var modelEntities: [ModelEntity] = []
+    private var planeEntities: [UUID:ModelEntity] = [:]
     
+    private var pannedEntity: Entity?
+    private var lastPan = CGPoint.zero
+    private var materialXPan:Float = 0
+    private var materialYPan:Float = 0
+    private var lastTranslation = CGPoint.zero
+    
+
     init(frame: CGRect, model: PlacingObjectModel) {
         super.init(frame: frame)
         self.model = model
         session.delegate = self
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal,.vertical]
+
         session.run(config, options: [])
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapped(sender:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
         self.addGestureRecognizer(tapGesture)
+        let panGesture = UIPanGestureRecognizer(target: self, action:  #selector(handlePan(sender:)))
+        self.addGestureRecognizer(panGesture)
     }
 
     required init?(coder decoder: NSCoder) {
@@ -49,7 +59,9 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
         fatalError("init(frame:) has not been implemented")
     }
     
-    @objc func tapped(sender: UITapGestureRecognizer){
+    // MARK: - Gestures
+    
+    @objc func handleTap(sender: UITapGestureRecognizer){
         let location = sender.location(in: self)
         if let entity = self.entity(at: location) as? ModelEntity, !planeEntities.values.contains(entity) {
             let modelEntity = ModelEntity(mesh: generateMesh())
@@ -67,7 +79,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                 }
             }
             modelEntities.append(modelEntity)
-
+            modelEntity.name = "modelEntity"
             entity.parent?.addChild(modelEntity)
 
         } else {
@@ -90,14 +102,42 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                         modelEntity.orientation = simd_quatf(angle: 1.5708 * 2, axis: [0,0,1])
                     }
                 }
-                
+                modelEntity.name = "modelEntity"
+
                 modelEntity.position.y = (modelEntity.model?.mesh.bounds.extents.y)! / 2
                 self.scene.addAnchor(anchorEntity)
             }
         }
     }
     
+    @objc func handlePan(sender: UIPanGestureRecognizer){
+        
+        switch sender.state {
+        case .began:
+            materialXPan = 0
+            materialYPan = 0
+            lastTranslation = CGPoint.zero
+            let location = sender.location(in: self)
+            for entity in entities(at: location) {
+                guard let modelEntity = entity as? ModelEntity else {continue}
+                if !planeEntities.values.contains(modelEntity) {
+                    pannedEntity = modelEntity
+                    print(modelEntity.name)
+                }
+            }
+        case .changed:
+            let newTranslation = sender.translation(in: self)
+            materialXPan = (Float(newTranslation.x) - Float(lastTranslation.x)) * -0.05
+            materialYPan = (Float(newTranslation.y) - Float(lastTranslation.y)) * -0.05
+            guard let entity = pannedEntity?.parent else {return}
+            entity.move(to: Transform(translation:[-materialXPan, materialYPan,0]), relativeTo: entity)
+            print(pannedEntity?.position)
+            lastTranslation = newTranslation
+        default: break
+        }
+    }
     
+    // MARK:- Generate Object Model
     
     func generateMesh() -> MeshResource {
         var mesh:MeshResource

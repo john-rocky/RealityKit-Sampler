@@ -59,7 +59,7 @@ struct PlaceObjectView: View {
                         Text(PlacingObjectModel.MaterialType.occlusion.rawValue).tag(PlacingObjectModel.MaterialType.occlusion)
                             .foregroundColor(.white)
                     }
-                    .frame(width: 70)
+                    .frame(width: 100)
                     .clipped()
                     }
                     
@@ -92,6 +92,7 @@ struct PlaceObjectView: View {
                             }
                             .labelsHidden()
                     }
+                    Spacer(minLength: 30)
                     VStack(spacing: -20) {
                         Text("Physics")
                         Picker("", selection: $physics) {
@@ -100,7 +101,7 @@ struct PlaceObjectView: View {
                             Text("true").tag(true)
                                 .foregroundColor(.white)
                         }
-                        .frame(width: 70)
+                        .frame(width: 50)
                         .clipped()
                     }
                 }

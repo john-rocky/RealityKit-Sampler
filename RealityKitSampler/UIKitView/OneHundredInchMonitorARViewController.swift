@@ -45,10 +45,7 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
 
     func addMonitorEntity() {
         anchorEntity = AnchorEntity(plane: .vertical)
-//        let boxEntity = ModelEntity(mesh: .generateBox(size: [2.31,0.05,1.34],cornerRadius: 0.02))
-//        let material = SimpleMaterial(color: .black, isMetallic: true)
-//        boxEntity.model?.materials = [material]
-
+        
         displayEntity = ModelEntity(mesh: .generateBox(size: [2.21,0.2,1.24],cornerRadius: 0.02))
         displayEntity.position = [0,0,0.03]
 

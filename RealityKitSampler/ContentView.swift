@@ -28,6 +28,11 @@ struct ContentView: View {
                     label: {
                         Text("Place Objects")
                     })
+                NavigationLink(
+                    destination: ExpressionsAndSpeechView(),
+                    label: {
+                        Text("ExpressionsAndSpeech")
+                    })
             }
         }.navigationBarTitle("")
         .navigationBarHidden(true)

@@ -48,5 +48,9 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string></string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string></string>
 </dict>
 </plist>

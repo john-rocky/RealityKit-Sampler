@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		7314210E268457E700EBB446 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314210D268457E700EBB446 /* ImagePickerView.swift */; };
 		7314211026856FB400EBB446 /* chihiro.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 7314210F26856FB400EBB446 /* chihiro.jpeg */; };
+		7314211226868D5100EBB446 /* ExpressionsAndSpeechView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314211126868D5100EBB446 /* ExpressionsAndSpeechView.swift */; };
+		7314211426868D7000EBB446 /* ExpressionsAndSpeechARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314211326868D7000EBB446 /* ExpressionsAndSpeechARView.swift */; };
+		731421162686935C00EBB446 /* face.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = 731421152686935C00EBB446 /* face.rcproject */; };
 		73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */; };
 		73F0ACD426803FE900199348 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD326803FE900199348 /* ContentView.swift */; };
 		73F0ACD626803FEB00199348 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73F0ACD526803FEB00199348 /* Assets.xcassets */; };
@@ -44,6 +47,9 @@
 /* Begin PBXFileReference section */
 		7314210D268457E700EBB446 /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		7314210F26856FB400EBB446 /* chihiro.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = chihiro.jpeg; sourceTree = "<group>"; };
+		7314211126868D5100EBB446 /* ExpressionsAndSpeechView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionsAndSpeechView.swift; sourceTree = "<group>"; };
+		7314211326868D7000EBB446 /* ExpressionsAndSpeechARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionsAndSpeechARView.swift; sourceTree = "<group>"; };
+		731421152686935C00EBB446 /* face.rcproject */ = {isa = PBXFileReference; lastKnownFileType = file.rcproject; path = face.rcproject; sourceTree = "<group>"; };
 		73F0ACCE26803FE900199348 /* RealityKitSampler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealityKitSampler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealityKitSamplerApp.swift; sourceTree = "<group>"; };
 		73F0ACD326803FE900199348 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -120,6 +126,7 @@
 				73F0ACFE26806ABC00199348 /* PlacingObjectModel.swift */,
 				73F0AD0626814AEB00199348 /* windChimes.mp4 */,
 				7314210F26856FB400EBB446 /* chihiro.jpeg */,
+				731421152686935C00EBB446 /* face.rcproject */,
 				73F0ACD526803FEB00199348 /* Assets.xcassets */,
 				73F0ACDA26803FEB00199348 /* Info.plist */,
 				73F0ACD726803FEB00199348 /* Preview Content */,
@@ -160,6 +167,7 @@
 				73F0AD042681441C00199348 /* OneHundredInchMonitorView.swift */,
 				73F0AD022680C4CB00199348 /* PlaceObjectView.swift */,
 				7314210D268457E700EBB446 /* ImagePickerView.swift */,
+				7314211126868D5100EBB446 /* ExpressionsAndSpeechView.swift */,
 			);
 			path = SwiftUIView;
 			sourceTree = "<group>";
@@ -169,6 +177,7 @@
 			children = (
 				73F0AD082681730200199348 /* OneHundredInchMonitorARViewController.swift */,
 				73F0ACFC2680408400199348 /* PlacingObjectARView.swift */,
+				7314211326868D7000EBB446 /* ExpressionsAndSpeechARView.swift */,
 			);
 			path = UIKitView;
 			sourceTree = "<group>";
@@ -306,13 +315,16 @@
 			files = (
 				73F0AD092681730200199348 /* OneHundredInchMonitorARViewController.swift in Sources */,
 				73F0AD032680C4CB00199348 /* PlaceObjectView.swift in Sources */,
+				7314211226868D5100EBB446 /* ExpressionsAndSpeechView.swift in Sources */,
 				7314210E268457E700EBB446 /* ImagePickerView.swift in Sources */,
 				73F0ACFD2680408400199348 /* PlacingObjectARView.swift in Sources */,
 				73F0AD012680C47F00199348 /* JustPlaceBoxView.swift in Sources */,
 				73F0ACFF26806ABC00199348 /* PlacingObjectModel.swift in Sources */,
+				731421162686935C00EBB446 /* face.rcproject in Sources */,
 				73F0ACD426803FE900199348 /* ContentView.swift in Sources */,
 				73F0AD052681441C00199348 /* OneHundredInchMonitorView.swift in Sources */,
 				73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */,
+				7314211426868D7000EBB446 /* ExpressionsAndSpeechARView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
