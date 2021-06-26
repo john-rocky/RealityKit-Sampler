@@ -19,7 +19,10 @@ class ExpressionsAndSpeechARView: ARView {
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private var audioEngine:AVAudioEngine?
+    private var inputNode:AVAudioInputNode?
 
+    private var recognitionInitialized = false
+        
     required init(frame: CGRect){
         super.init(frame: frame)
         let config = ARFaceTrackingConfiguration()
@@ -30,6 +33,15 @@ class ExpressionsAndSpeechARView: ARView {
         speechBalloon = faceScene.speechBalloon
         updateSpeechText(speechText: "chocolate")
         
+        startSpeechRecognition()
+
+    }
+    
+    required init?(coder decoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func startSpeechRecognition() {
         speechRecognizer = SFSpeechRecognizer(locale: Locale.current) ?? SFSpeechRecognizer(locale: Locale(identifier: "en_US"))
         audioEngine = AVAudioEngine()
         SFSpeechRecognizer.requestAuthorization { authStatus in
@@ -50,18 +62,9 @@ class ExpressionsAndSpeechARView: ARView {
                 }
             }
         }
-        startSpeechRecognition()
-    }
-    
-    required init?(coder decoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func startSpeechRecognition() {
+
         recognitionTask?.cancel()
         self.recognitionTask = nil
-        
-        // Configure the audio session for the app.
         let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
@@ -69,7 +72,9 @@ class ExpressionsAndSpeechARView: ARView {
         } catch let error {
             print(error)
         }
-        let inputNode = audioEngine!.inputNode
+        inputNode = audioEngine!.inputNode
+        // Configure the audio session for the app.
+
         
         // Create and configure the speech recognition request.
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
@@ -93,22 +98,24 @@ class ExpressionsAndSpeechARView: ARView {
                 isFinal = result.isFinal
                 print("Text \(result.bestTranscription.formattedString)")
                 let resultString = result.bestTranscription.formattedString
-                self.updateSpeechText(speechText: resultString)
+                self.getCurrentText(speechText: resultString)
+//                self.updateSpeechText(speechText: resultString)
             }
             
             if error != nil || isFinal {
                 // Stop recognizing speech if there is a problem.
-                self.audioEngine?.stop()
-                inputNode.removeTap(onBus: 0)
-                
-                self.recognitionRequest = nil
-                self.recognitionTask = nil
+                print(error)
+//                self.audioEngine?.stop()
+//                self.inputNode?.removeTap(onBus: 0)
+//
+//                self.recognitionRequest = nil
+//                self.recognitionTask = nil
             }
         }
         
         // Configure the microphone input.
-        let recordingFormat = inputNode.outputFormat(forBus: 0)
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+        let recordingFormat = inputNode?.outputFormat(forBus: 0)
+        inputNode?.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
             self.recognitionRequest?.append(buffer)
         }
         
@@ -117,6 +124,36 @@ class ExpressionsAndSpeechARView: ARView {
             try audioEngine?.start()
         } catch let error {
             print(error)
+        }
+        recognitionInitialized = false
+    }
+    
+    
+    func getCurrentText(speechText: String) {
+
+        print(speechText.count)
+        var currentText = speechText
+        switch speechText.count {
+        case 5...10 :
+            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 5))
+            updateSpeechText(speechText: currentText)
+        case 11...15 :
+            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 5))
+            currentText.insert("\n", at: currentText.index(currentText.startIndex, offsetBy: 10))
+            updateSpeechText(speechText: currentText)
+        case 16...:
+            self.audioEngine?.stop()
+            self.inputNode?.removeTap(onBus: 0)
+            recognitionTask?.cancel()
+            self.recognitionRequest = nil
+            self.recognitionTask = nil
+            if !recognitionInitialized {
+                recognitionInitialized = true
+                
+                startSpeechRecognition()
+            }
+        default:
+            updateSpeechText(speechText: currentText)
         }
     }
     

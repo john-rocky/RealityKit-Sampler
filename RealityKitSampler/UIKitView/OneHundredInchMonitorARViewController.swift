@@ -8,17 +8,20 @@
 import UIKit
 import SwiftUI
 import RealityKit
+import ARKit
 import AVFoundation
 import Combine
 
-class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ARSessionDelegate {
     
     private var videoLooper: AVPlayerLooper!
     private var arView: ARView!
     private var player: AVQueuePlayer!
     private var displayEntity: ModelEntity!
-    private var anchorEntity: AnchorEntity!
+//    private var anchorEntity: AnchorEntity!
     private var isActiveSub:Cancellable!
+    
+    private var planeAchors:[UUID: AnchorEntity] = [:]
     
     @Binding var didTap:Bool
     
@@ -35,16 +38,24 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
         super.viewDidLoad()
         arView = ARView(frame: view.bounds)
         view.addSubview(arView)
-        addMonitorEntity()
+        arView.session.delegate = self
+//        addMonitorEntity()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let config = ARWorldTrackingConfiguration()
+        config.planeDetection = [.vertical]
+        arView.session.run(config, options: [])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         player.pause()
     }
-
-    func addMonitorEntity() {
-        anchorEntity = AnchorEntity(plane: .vertical)
+    
+    func addMonitorEntity(anchor:ARPlaneAnchor) {
+        let anchorEntity = AnchorEntity(anchor: anchor)
         
         displayEntity = ModelEntity(mesh: .generateBox(size: [2.21,0.2,1.24],cornerRadius: 0.02))
         displayEntity.position = [0,0,0.03]
@@ -66,6 +77,7 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
         })
         
         arView.scene.addAnchor(anchorEntity)
+        planeAchors[anchor.identifier] = anchorEntity
     }
     
     func showPicker() {
@@ -95,4 +107,17 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
         picker.dismiss(animated: true, completion: nil)
     }
     
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        for anchor in anchors {
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
+            addMonitorEntity(anchor: planeAnchor)
+        }
+    }
+
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        for anchor in anchors {
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
+            planeAchors[anchor.identifier]?.position = planeAnchor.center
+        }
+    }
 }
