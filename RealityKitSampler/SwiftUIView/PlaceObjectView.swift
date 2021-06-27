@@ -134,10 +134,6 @@ struct ARContainerView: View {
 struct ARViewContainer: UIViewRepresentable {
     @Binding var physics: Bool
     @Binding var model:PlacingObjectModel
-
-    func update(angles:simd_float3) {
-        
-    }
     
     func makeUIView(context: Context) -> PlacingObjectARView {
         let arView = PlacingObjectARView(frame: .zero,model: model)

@@ -31,7 +31,12 @@ struct ContentView: View {
                 NavigationLink(
                     destination: ExpressionsAndSpeechView(),
                     label: {
-                        Text("ExpressionsAndSpeech")
+                        Text("Expressions And Speech")
+                    })
+                NavigationLink(
+                    destination: KillMoveView(),
+                    label: {
+                        Text("Kill Move")
                     })
             }
         }.navigationBarTitle("")

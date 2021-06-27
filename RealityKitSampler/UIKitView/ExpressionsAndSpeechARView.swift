@@ -6,10 +6,15 @@
 //
 
 import UIKit
+import SwiftUI
 import RealityKit
 import ARKit
 import Speech
 import AVFoundation
+
+protocol ExpressionsAndSpeechARViewDelegate: NSObjectProtocol {
+    func expressionDidChange(expression:ExpressionsAndSpeechARView.Expression)
+}
 
 class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
 
@@ -22,23 +27,40 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
     private var inputNode:AVAudioInputNode?
 
     private var recognitionInitialized = false
+    
+    @Binding var expression: Expression
+    weak var delegate: ExpressionsAndSpeechARViewDelegate?
+    
+    public enum Expression:String {
+        case normal
+        case smile
+        case angry
+        case surprise
+        case naughty
+    }
         
-    required init(frame: CGRect){
+    init(frame: CGRect, expression:Binding<Expression>){
+        self._expression = expression
         super.init(frame: frame)
         let config = ARFaceTrackingConfiguration()
+        session.delegate = self
         session.run(config, options: [])
-
+        
         guard let faceScene = try? Face.loadFaceScene() else {return}
         scene.addAnchor(faceScene)
         speechBalloon = faceScene.speechBalloon
         updateSpeechText(speechText: "chocolate")
         
         startSpeechRecognition()
-
+        addExpressionSpheres()
     }
     
     required init?(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    required init(frame frameRect: CGRect) {
+        fatalError("init(frame:) has not been implemented")
     }
     
     func startSpeechRecognition() {
@@ -173,9 +195,63 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
         text.components.set(textComponent)
     }
     
+    func addExpressionSpheres() {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        label.font = .systemFont(ofSize: 20)
+        label.text = "😁"
+        addSubview(label)
+        if let snapShot = label.snapshot, let data = snapShot.pngData() {
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let filePath = documentsDirectory.appendingPathComponent("temp.png")
+            try? data.write(to: filePath)
+            let anchorEntity = AnchorEntity(world: [0,0,-0.5])
+            let modelEntity = ModelEntity(mesh: .generateBox(size: 0.1))
+            guard let texture = try? TextureResource.load(contentsOf: filePath) else {return}
+            var material = UnlitMaterial()
+            material.baseColor = MaterialColorParameter.texture(texture)
+            modelEntity.model?.materials = [material]
+            anchorEntity.addChild(modelEntity)
+            scene.addAnchor(anchorEntity)
+        }
+
+    }
+    
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         for anchor in anchors {
-            
+            guard let faceAnchor = anchor as? ARFaceAnchor else { continue }
+            let blendShapes = faceAnchor.blendShapes
+            guard let smile = blendShapes[.mouthSmileLeft]?.doubleValue,
+                  let angry = blendShapes[.cheekPuff]?.doubleValue,
+                  let surprise = blendShapes[.jawOpen]?.doubleValue,
+                  let nauty = blendShapes[.tongueOut]?.doubleValue,
+                  (smile > 0.75 || angry > 0.75 || surprise > 0.75 || nauty > 0.75) else {
+                self.expression = .normal
+                continue
+            }
+                
+            let expression = max(smile, angry, surprise)
+            switch expression {
+            case smile:
+                delegate?.expressionDidChange(expression: .smile)
+            case angry:
+                delegate?.expressionDidChange(expression: .angry)
+            case surprise:
+                delegate?.expressionDidChange(expression: .surprise)
+            case nauty:
+                delegate?.expressionDidChange(expression: .naughty)
+            default:
+                delegate?.expressionDidChange(expression: .normal)
+            }
         }
+    }
+}
+
+extension UIView {
+    var snapshot: UIImage? {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0.0)
+        drawHierarchy(in: bounds, afterScreenUpdates: true)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 }

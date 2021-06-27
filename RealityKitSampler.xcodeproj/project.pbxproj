@@ -12,6 +12,8 @@
 		7314211226868D5100EBB446 /* ExpressionsAndSpeechView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314211126868D5100EBB446 /* ExpressionsAndSpeechView.swift */; };
 		7314211426868D7000EBB446 /* ExpressionsAndSpeechARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314211326868D7000EBB446 /* ExpressionsAndSpeechARView.swift */; };
 		731421162686935C00EBB446 /* face.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = 731421152686935C00EBB446 /* face.rcproject */; };
+		73142192268819C600EBB446 /* KillMoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73142191268819C100EBB446 /* KillMoveView.swift */; };
+		7314219A26881F3400EBB446 /* KillMoveARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314219926881F3400EBB446 /* KillMoveARViewController.swift */; };
 		73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */; };
 		73F0ACD426803FE900199348 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD326803FE900199348 /* ContentView.swift */; };
 		73F0ACD626803FEB00199348 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73F0ACD526803FEB00199348 /* Assets.xcassets */; };
@@ -50,6 +52,8 @@
 		7314211126868D5100EBB446 /* ExpressionsAndSpeechView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionsAndSpeechView.swift; sourceTree = "<group>"; };
 		7314211326868D7000EBB446 /* ExpressionsAndSpeechARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionsAndSpeechARView.swift; sourceTree = "<group>"; };
 		731421152686935C00EBB446 /* face.rcproject */ = {isa = PBXFileReference; lastKnownFileType = file.rcproject; path = face.rcproject; sourceTree = "<group>"; };
+		73142191268819C100EBB446 /* KillMoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KillMoveView.swift; sourceTree = "<group>"; };
+		7314219926881F3400EBB446 /* KillMoveARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KillMoveARViewController.swift; sourceTree = "<group>"; };
 		73F0ACCE26803FE900199348 /* RealityKitSampler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealityKitSampler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealityKitSamplerApp.swift; sourceTree = "<group>"; };
 		73F0ACD326803FE900199348 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -168,6 +172,7 @@
 				73F0AD022680C4CB00199348 /* PlaceObjectView.swift */,
 				7314210D268457E700EBB446 /* ImagePickerView.swift */,
 				7314211126868D5100EBB446 /* ExpressionsAndSpeechView.swift */,
+				73142191268819C100EBB446 /* KillMoveView.swift */,
 			);
 			path = SwiftUIView;
 			sourceTree = "<group>";
@@ -178,6 +183,7 @@
 				73F0AD082681730200199348 /* OneHundredInchMonitorARViewController.swift */,
 				73F0ACFC2680408400199348 /* PlacingObjectARView.swift */,
 				7314211326868D7000EBB446 /* ExpressionsAndSpeechARView.swift */,
+				7314219926881F3400EBB446 /* KillMoveARViewController.swift */,
 			);
 			path = UIKitView;
 			sourceTree = "<group>";
@@ -314,8 +320,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				73F0AD092681730200199348 /* OneHundredInchMonitorARViewController.swift in Sources */,
+				73142192268819C600EBB446 /* KillMoveView.swift in Sources */,
 				73F0AD032680C4CB00199348 /* PlaceObjectView.swift in Sources */,
 				7314211226868D5100EBB446 /* ExpressionsAndSpeechView.swift in Sources */,
+				7314219A26881F3400EBB446 /* KillMoveARViewController.swift in Sources */,
 				7314210E268457E700EBB446 /* ImagePickerView.swift in Sources */,
 				73F0ACFD2680408400199348 /* PlacingObjectARView.swift in Sources */,
 				73F0AD012680C47F00199348 /* JustPlaceBoxView.swift in Sources */,

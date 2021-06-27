@@ -18,11 +18,9 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
     private var arView: ARView!
     private var player: AVQueuePlayer!
     private var displayEntity: ModelEntity!
-//    private var anchorEntity: AnchorEntity!
+    private var anchorEntity: (UUID, AnchorEntity)?
     private var isActiveSub:Cancellable!
-    
-    private var planeAchors:[UUID: AnchorEntity] = [:]
-    
+        
     @Binding var didTap:Bool
     
     init(didTap:Binding<Bool>) {
@@ -77,7 +75,7 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
         })
         
         arView.scene.addAnchor(anchorEntity)
-        planeAchors[anchor.identifier] = anchorEntity
+        self.anchorEntity = (anchor.identifier,anchorEntity)
     }
     
     func showPicker() {
@@ -110,14 +108,18 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
         for anchor in anchors {
             guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
-            addMonitorEntity(anchor: planeAnchor)
+            if anchorEntity == nil {
+                addMonitorEntity(anchor: planeAnchor)
+            }
         }
     }
-
+    
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         for anchor in anchors {
             guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
-            planeAchors[anchor.identifier]?.position = planeAnchor.center
+            if anchorEntity != nil, planeAnchor.identifier == anchorEntity?.0 {
+                anchorEntity?.1.position = planeAnchor.center
+            }
         }
     }
 }
