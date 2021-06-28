@@ -66,7 +66,7 @@ PROFILES:
 
 WORKS:
 
-BLOGS:
+BLOGS: [Medium](https://rockyshikoku.medium.com/)
 
 CONTACTS: rockyshikoku@gmail.com
 
