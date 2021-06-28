@@ -14,7 +14,7 @@ struct PlacingObjectModel {
         case box
         case plane
         case sphere
-        
+
         var id: String { self.rawValue }
     }
     
@@ -28,13 +28,22 @@ struct PlacingObjectModel {
         var id: String { self.rawValue }
     }
     
+    enum PhysicsBodyType: String, CaseIterable, Identifiable {
+        case _kinematic
+        case _static
+        case _dynamic
+        
+        var id: String { self.rawValue }
+    }
+    
     var meshType: MeshType = .box
     var materialType: MaterialType = .simple
+    var physics: PhysicsBodyType = ._kinematic
+
     // texture
     
     var color: UIColor = .white
     var image: UIImage? = UIImage(named: "chihiro")
     var imageURL: URL? = Bundle.main.url(forResource: "chihiro", withExtension: ".jpeg")
     var videoURL: URL? = Bundle.main.url(forResource: "windChimes", withExtension: "mp4")
-    var physics: Bool = false
 }

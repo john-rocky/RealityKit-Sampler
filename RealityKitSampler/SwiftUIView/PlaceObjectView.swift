@@ -9,7 +9,6 @@ import SwiftUI
 import RealityKit
 
 struct PlaceObjectView: View {
-    @State private var physics: Bool = false
     @State private var model = PlacingObjectModel()
     @State private var meshMenuText = "Mesh:Box"
     @State private var color = Color(.white)
@@ -19,7 +18,7 @@ struct PlaceObjectView: View {
     var body: some View {
         
         ZStack {
-            ARContainerView(physics: $physics, model: $model)
+            ARContainerView(model: $model)
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
@@ -95,13 +94,16 @@ struct PlaceObjectView: View {
                     Spacer(minLength: 30)
                     VStack(spacing: -20) {
                         Text("Physics")
-                        Picker("", selection: $physics) {
-                            Text("false").tag(false)
+                            .font(.headline)
+                        Picker("", selection: $model.physics) {
+                            Text(PlacingObjectModel.PhysicsBodyType._kinematic.rawValue).font(.caption2).tag(PlacingObjectModel.PhysicsBodyType._kinematic)
                                 .foregroundColor(.white)
-                            Text("true").tag(true)
+                            Text(PlacingObjectModel.PhysicsBodyType._static.rawValue).font(.caption2).tag(PlacingObjectModel.PhysicsBodyType._static)
+                                .foregroundColor(.white)
+                            Text(PlacingObjectModel.PhysicsBodyType._dynamic.rawValue).font(.caption2).tag(PlacingObjectModel.PhysicsBodyType._dynamic)
                                 .foregroundColor(.white)
                         }
-                        .frame(width: 50)
+                        .frame(width: 70)
                         .clipped()
                     }
                 }
@@ -122,17 +124,15 @@ struct PlaceObjectView: View {
 }
 
 struct ARContainerView: View {
-    @Binding var physics: Bool
     @Binding var model:PlacingObjectModel
     var body: some View {
-        return ARViewContainer(physics: $physics,model: $model)
+        return ARViewContainer(model: $model)
             .edgesIgnoringSafeArea(.all)
     }
 }
 
 
 struct ARViewContainer: UIViewRepresentable {
-    @Binding var physics: Bool
     @Binding var model:PlacingObjectModel
     
     func makeUIView(context: Context) -> PlacingObjectARView {
@@ -142,7 +142,6 @@ struct ARViewContainer: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: PlacingObjectARView, context: Context) {
-        uiView.physics = physics
         uiView.model = model
     }
 }

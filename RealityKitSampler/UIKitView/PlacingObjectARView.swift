@@ -12,43 +12,33 @@ import ARKit
 import AVFoundation
 
 class PlacingObjectARView: ARView, ARSessionDelegate {
-    
-    var physics: Bool = false {
+
+    var model:PlacingObjectModel! {
         didSet {
-            print(physics)
-            print(model.meshType)
-            if physics {
-                addPhysics()
-            } else {
-                removePhysics()
-            }
+            print(model)
         }
     }
-    
-    var model:PlacingObjectModel!
     var resolution:CGAffineTransform?
     private var modelEntities: [ModelEntity] = []
     private var planeEntities: [UUID:ModelEntity] = [:]
+    var physicsChanged: Bool = false
     
-    private var pannedEntity: Entity?
-    private var lastPan = CGPoint.zero
-    private var materialXPan:Float = 0
-    private var materialYPan:Float = 0
-    private var lastTranslation = CGPoint.zero
+    private var longPressedEntity: Entity?
+    private var longPress: Bool = false
     
 
     init(frame: CGRect, model: PlacingObjectModel) {
         super.init(frame: frame)
         self.model = model
-        session.delegate = self
-        let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal,.vertical]
+//        session.delegate = self
+//        let config = ARWorldTrackingConfiguration()
+//        config.planeDetection = [.horizontal,.vertical]
 
-        session.run(config, options: [])
+//        session.run(config, options: [])
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
         self.addGestureRecognizer(tapGesture)
-        let panGesture = UIPanGestureRecognizer(target: self, action:  #selector(handlePan(sender:)))
-        self.addGestureRecognizer(panGesture)
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action:  #selector(handleLongPress(sender:)))
+        self.addGestureRecognizer(longPressGesture)
     }
 
     required init?(coder decoder: NSCoder) {
@@ -63,26 +53,12 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     
     @objc func handleTap(sender: UITapGestureRecognizer){
         let location = sender.location(in: self)
-        if let entity = self.entity(at: location) as? ModelEntity, !planeEntities.values.contains(entity) {
-            let modelEntity = ModelEntity(mesh: generateMesh())
-            modelEntity.model?.materials = [generateMaterial()]
-            modelEntity.position = entity.position
-            modelEntity.position.y += (modelEntity.model?.mesh.bounds.extents.y)! / 2
-            if physics {
-                modelEntity.addPhysicsBody()
-            }
-            if model.materialType == .video {
-                if resolution!.b != 0{
-                    modelEntity.orientation = simd_quatf(angle: -1.5708, axis: [0,0,1])
-                } else if resolution!.a != 1.0 {
-                    modelEntity.orientation = simd_quatf(angle: 1.5708 * 2, axis: [0,0,1])
-                }
-            }
-            modelEntities.append(modelEntity)
-            modelEntity.name = "modelEntity"
-            entity.parent?.addChild(modelEntity)
-
+        if let entity = self.entity(at: location) as? ModelEntity, entity.physicsBody?.mode == .dynamic, !planeEntities.values.contains(entity) {
+            
+            entity.addForce([0,0,-100], relativeTo: nil)
+        
         } else {
+            
             let results = self.raycast(from: location, allowing: .estimatedPlane, alignment: .any)
             if let firstResult = results.first {
                 let anchor = ARAnchor(name: "Anchor for object placement", transform: firstResult.worldTransform)
@@ -92,8 +68,14 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                 modelEntity.model?.materials = [generateMaterial()]
                 anchorEntity.addChild(modelEntity)
                 modelEntities.append(modelEntity)
-                if physics {
-                    modelEntity.addPhysicsBody()
+                modelEntity.generateCollisionShapes(recursive: true)
+                switch model.physics {
+                case ._kinematic:
+                    modelEntity.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .kinematic)
+                case ._static:
+                    modelEntity.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .static)
+                case ._dynamic:
+                    modelEntity.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
                 }
                 if model.materialType == .video {
                     if resolution!.b != 0{
@@ -102,39 +84,64 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                         modelEntity.orientation = simd_quatf(angle: 1.5708 * 2, axis: [0,0,1])
                     }
                 }
-                modelEntity.name = "modelEntity"
-
+                installGestures(.all, for: modelEntity).forEach { recognizer in
+                    recognizer.addTarget(self, action: #selector(handleGesture(sender:)))
+                }
+                
                 modelEntity.position.y = (modelEntity.model?.mesh.bounds.extents.y)! / 2
                 self.scene.addAnchor(anchorEntity)
             }
         }
     }
     
-    @objc func handlePan(sender: UIPanGestureRecognizer){
+    @objc func handleGesture(sender: UIGestureRecognizer){
+        if let panGesture = sender as? EntityTranslationGestureRecognizer {
+            switch sender.state {
+            case .began:
+                guard let modelEntity = panGesture.entity as? ModelEntity else { return }
+                if modelEntity.physicsBody?.mode == .dynamic {
+                    physicsChanged = true
+                    modelEntity.physicsBody?.mode = .kinematic
+                }                    
+            case .ended:
+                guard let modelEntity = panGesture.entity as? ModelEntity else { return }
+                if physicsChanged {
+                    physicsChanged = false
+                    modelEntity.physicsBody?.mode = .dynamic
+                }
+            default: break
+            }
+        }
+        if let pintchGesture = sender as? EntityScaleGestureRecognizer {
+            print(pintchGesture.scale)
+        }
         
+        if let doubleFingerGesture = sender as? EntityRotationGestureRecognizer {
+            print(doubleFingerGesture.rotation)
+        }
+    }
+    
+    @objc func handleLongPress(sender: UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:
-            materialXPan = 0
-            materialYPan = 0
-            lastTranslation = CGPoint.zero
+            longPress = true
             let location = sender.location(in: self)
-            for entity in entities(at: location) {
-                guard let modelEntity = entity as? ModelEntity else {continue}
-                if !planeEntities.values.contains(modelEntity) {
-                    pannedEntity = modelEntity
-                    print(modelEntity.name)
+            if let entity = self.entity(at: location) as? ModelEntity, !planeEntities.values.contains(entity) {
+                entity.physicsBody?.mode = .kinematic
+                Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { Timer in
+                    if self.longPress {
+                        entity.position.y += 0.005
+                    } else {
+                        entity.physicsBody?.mode = .dynamic
+                        Timer.invalidate()
+                    }
                 }
             }
-        case .changed:
-            let newTranslation = sender.translation(in: self)
-            materialXPan = (Float(newTranslation.x) - Float(lastTranslation.x)) * -0.05
-            materialYPan = (Float(newTranslation.y) - Float(lastTranslation.y)) * -0.05
-            guard let entity = pannedEntity?.parent else {return}
-            entity.move(to: Transform(translation:[-materialXPan, materialYPan,0]), relativeTo: entity)
-            print(pannedEntity?.position)
-            lastTranslation = newTranslation
+        case .ended:
+            longPress = false
         default: break
         }
+
     }
     
     // MARK:- Generate Object Model
@@ -306,6 +313,6 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
 extension ModelEntity {
     func addPhysicsBody() {
         physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
-        generateCollisionShapes(recursive: false)
+        generateCollisionShapes(recursive: true)
     }
 }
