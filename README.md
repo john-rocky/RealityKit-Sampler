@@ -51,7 +51,7 @@ Multi Device AR Game.
 | Just put the box  | ARView in SwiftUI, Scene, Entity, Anchor, MeshResource, Material.  |
 | 100-inch monitor  | VideoMaterial, SceneEvent  |
 | Tap and Drag | Ray Cast, Hit Test, Handle Gestures, Physics, Collision, TextureResource |
-| Expressions and Speech | Face Anchor, ARSessionDelegate|
+| Expressions and Speech | Face Anchor, ARSessionDelegate, Deal with RealityComposer |
 | Kill Move | Body Anchor |
 | Light Apple | Image Anchor |
 | Multi Device AR Game | Collaborate Session |
@@ -66,8 +66,10 @@ PROFILES:
 
 WORKS:
 
-BLOGS: [Medium](https://rockyshikoku.medium.com/)
+BLOGS:  [Medium](https://rockyshikoku.medium.com/)
 
-CONTACTS: rockyshikoku@gmail.com
+CONTACTS:  rockyshikoku@gmail.com
 
 ## Special Thanks
+
+Inspired by:  [ARKit-Sampler](https://github.com/shu223/ARKit-Sampler)
