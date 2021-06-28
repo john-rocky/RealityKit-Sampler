@@ -1,4 +1,4 @@
-# RealityKitSampler
+# RealityKit-Sampler
 
 RealityKitSampler is the sample　collection of the basic functions of RealityKit.
 
