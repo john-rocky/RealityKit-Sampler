@@ -21,9 +21,11 @@ How to select a video from your album and paste it as a texture.
 
 ![Jun-28-2021 22-09-13](https://user-images.githubusercontent.com/23278992/123641992-c8f52800-d85d-11eb-918a-4619071a54c9.gif)
 
-### Tap and Drag
+### Building blocks
 
 How to place objects of different shapes and colors.
+
+![Jun-28-2021 22-27-24](https://user-images.githubusercontent.com/23278992/123644152-11ade080-d860-11eb-828f-68e86ac8ee28.gif)
 
 ### Expressions and Speech
 
