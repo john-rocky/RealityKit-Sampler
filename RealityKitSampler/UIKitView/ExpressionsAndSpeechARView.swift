@@ -12,16 +12,14 @@ import ARKit
 import Speech
 import AVFoundation
 
-protocol ExpressionsAndSpeechARViewDelegate: NSObjectProtocol {
-    func expressionDidChange(expression:ExpressionsAndSpeechARView.Expression)
-}
-
 class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
 
     private var speechBalloon:Entity!
-    private var cheekLeft:Entity!
-    private var cheekRight:Entity!
-
+    private var smileLeft:ModelEntity!
+    private var smileRight:ModelEntity!
+    private var smileText:Entity!
+    private var cheekLeft:ModelEntity!
+    private var cheekRight:ModelEntity!
     
     private var speechRecognizer:SFSpeechRecognizer?
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
@@ -32,7 +30,6 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
     private var recognitionInitialized = false
     
     @Binding var expression: Expression
-    weak var delegate: ExpressionsAndSpeechARViewDelegate?
     
     public enum Expression:String {
         case normal
@@ -52,11 +49,24 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
         guard let faceScene = try? Face.loadFaceScene() else {return}
         scene.addAnchor(faceScene)
         speechBalloon = faceScene.speechBalloon
-        cheekLeft = faceScene.cheekLeft
-        cheekLeft = faceScene.cheekRIght
+        smileLeft = faceScene.smileLeft?.children.first as! ModelEntity
+        smileRight = faceScene.smileRight?.children.first as! ModelEntity
+        smileText = faceScene.smileText
+        cheekLeft = faceScene.cheekLeft?.children.first as! ModelEntity
+        cheekRight = faceScene.cheekRight?.children.first as! ModelEntity
         
-
-        updateSpeechText(speechText: "chocolate")
+        let smileColor = UIColor.init(cgColor: #colorLiteral(red: 1, green: 0.7907919884, blue: 0.9095974565, alpha: 0.147529118))
+        smileLeft.model?.materials = [UnlitMaterial(color: smileColor)]
+        smileRight.model?.materials = [UnlitMaterial(color: smileColor)]
+        smileLeft.isEnabled = false
+        smileRight.isEnabled = false
+        smileText.isEnabled = false
+        
+        let cheekColor = UIColor.init(cgColor: #colorLiteral(red: 1, green: 0.7203390002, blue: 0.3678158522, alpha: 0.147529118))
+        cheekLeft.model?.materials = [UnlitMaterial(color: cheekColor)]
+        cheekRight.model?.materials = [UnlitMaterial(color: cheekColor)]
+        cheekLeft.isEnabled = false
+        cheekRight.isEnabled = false
         
         startSpeechRecognition()
     }
@@ -186,30 +196,46 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        
         for anchor in anchors {
+            
             guard let faceAnchor = anchor as? ARFaceAnchor else { continue }
+            
             let blendShapes = faceAnchor.blendShapes
             guard let smile = blendShapes[.mouthSmileLeft]?.doubleValue,
                   let angry = blendShapes[.cheekPuff]?.doubleValue,
                   let surprise = blendShapes[.jawOpen]?.doubleValue,
                   let nauty = blendShapes[.tongueOut]?.doubleValue,
                   (smile > 0.75 || angry > 0.75 || surprise > 0.75 || nauty > 0.75) else {
+                
                 self.expression = .normal
+                
+                smileLeft.isEnabled = false
+                smileRight.isEnabled = false
+                smileText.isEnabled = false
+
+                cheekLeft.isEnabled = false
+                cheekRight.isEnabled = false
+                
                 continue
             }
                 
             let expression = max(smile, angry, surprise)
+            
             switch expression {
+            
             case smile:
-                delegate?.expressionDidChange(expression: .smile)
+                smileLeft.isEnabled = true
+                smileRight.isEnabled = true
+                smileText.isEnabled = true
+
             case angry:
-                delegate?.expressionDidChange(expression: .angry)
-            case surprise:
-                delegate?.expressionDidChange(expression: .surprise)
-            case nauty:
-                delegate?.expressionDidChange(expression: .naughty)
+                cheekLeft.isEnabled = true
+                cheekRight.isEnabled = true
+                
             default:
-                delegate?.expressionDidChange(expression: .normal)
+                break
+            
             }
         }
     }

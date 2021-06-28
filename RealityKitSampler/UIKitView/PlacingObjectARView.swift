@@ -15,7 +15,6 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
 
     var model:PlacingObjectModel!
     var resolution:CGAffineTransform?
-//    private var modelEntities: [ModelEntity] = []
     private var planeEntities: [UUID:ModelEntity] = [:]
     var physicsChanged: Bool = false
     
@@ -30,11 +29,6 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     init(frame: CGRect, model: PlacingObjectModel) {
         super.init(frame: frame)
         self.model = model
-//        session.delegate = self
-//        let config = ARWorldTrackingConfiguration()
-//        config.planeDetection = [.horizontal,.vertical]
-
-//        session.run(config, options: [])
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
         self.addGestureRecognizer(tapGesture)
         let pan = UIPanGestureRecognizer(target: self, action:  #selector(handlePan(sender:)))
@@ -68,7 +62,6 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                 let modelEntity = ModelEntity(mesh: generateMesh())
                 modelEntity.model?.materials = [generateMaterial()]
                 anchorEntity.addChild(modelEntity)
-//                modelEntities.append(modelEntity)
                 modelEntity.generateCollisionShapes(recursive: true)
                 switch model.physics {
                 case ._kinematic:
@@ -153,7 +146,6 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
             }
         default: break
         }
-
     }
     
     // MARK:- Generate Object Model
@@ -273,53 +265,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
         item.seek(to: CMTime.zero, completionHandler: nil)
     }
     
-//    func addPhysics() {
-//        for modelEntity in modelEntities {
-//            modelEntity.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
-//            modelEntity.generateCollisionShapes(recursive: false)
-//        }
-//    }
-//
-//    func removePhysics() {
-//        for modelEntity in modelEntities {
-//            modelEntity.physicsBody = nil
-//            modelEntity.collision = nil
-//        }
-//    }
-    
-    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-        for anchor in anchors {
-            guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
-            let plane = ModelEntity(mesh: .generatePlane(width: planeAnchor.extent.x, depth: planeAnchor.extent.z))
-            plane.model?.materials = [OcclusionMaterial()]
-            plane.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .generate(), mode: .static)
-            plane.generateCollisionShapes(recursive: false)
-            plane.position.y = -0.02
-            let anchorEntity = AnchorEntity(anchor: planeAnchor)
-            anchorEntity.addChild(plane)
-            planeEntities[planeAnchor.identifier] = plane
-            self.scene.addAnchor(anchorEntity)
-        }
-    }
-    
-    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        for anchor in anchors {
-            guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
-            guard let modelExtents = planeEntities[planeAnchor.identifier]?.model?.mesh.bounds.extents else { continue }
-            let scaleX = planeAnchor.extent.x / modelExtents.x
-            let scaleZ = planeAnchor.extent.z / modelExtents.z
-            planeEntities[planeAnchor.identifier]?.scale = [scaleX,1,scaleZ]
-        }
-    }
-    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
     }
 
 }
-
-//extension ModelEntity {
-//    func addPhysicsBody() {
-//        physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
-//        generateCollisionShapes(recursive: true)
-//    }
-//}
