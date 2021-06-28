@@ -19,6 +19,9 @@ protocol ExpressionsAndSpeechARViewDelegate: NSObjectProtocol {
 class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
 
     private var speechBalloon:Entity!
+    private var cheekLeft:Entity!
+    private var cheekRight:Entity!
+
     
     private var speechRecognizer:SFSpeechRecognizer?
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
@@ -49,10 +52,13 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
         guard let faceScene = try? Face.loadFaceScene() else {return}
         scene.addAnchor(faceScene)
         speechBalloon = faceScene.speechBalloon
+        cheekLeft = faceScene.cheekLeft
+        cheekLeft = faceScene.cheekRIght
+        
+
         updateSpeechText(speechText: "chocolate")
         
         startSpeechRecognition()
-        addExpressionSpheres()
     }
     
     required init?(coder decoder: NSCoder) {
@@ -95,47 +101,31 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
             print(error)
         }
         inputNode = audioEngine!.inputNode
-        // Configure the audio session for the app.
 
-        
-        // Create and configure the speech recognition request.
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         guard let recognitionRequest = recognitionRequest else { fatalError("Unable to create a SFSpeechAudioBufferRecognitionRequest object") }
         recognitionRequest.shouldReportPartialResults = true
         
-        // Keep speech recognition data on device
         if #available(iOS 13, *) {
             recognitionRequest.requiresOnDeviceRecognition = false
         }
         
-        
-        // Create a recognition task for the speech recognition session.
-        // Keep a reference to the task so that it can be canceled.
         speechRecognizer?.defaultTaskHint = .confirmation
         recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { result, error in
             var isFinal = false
             
             if let result = result {
-                // Update the text view with the results.
                 isFinal = result.isFinal
                 print("Text \(result.bestTranscription.formattedString)")
                 let resultString = result.bestTranscription.formattedString
                 self.getCurrentText(speechText: resultString)
-//                self.updateSpeechText(speechText: resultString)
             }
             
             if error != nil || isFinal {
-                // Stop recognizing speech if there is a problem.
                 print(error)
-//                self.audioEngine?.stop()
-//                self.inputNode?.removeTap(onBus: 0)
-//
-//                self.recognitionRequest = nil
-//                self.recognitionTask = nil
             }
         }
         
-        // Configure the microphone input.
         let recordingFormat = inputNode?.outputFormat(forBus: 0)
         inputNode?.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
             self.recognitionRequest?.append(buffer)
@@ -195,27 +185,6 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
         text.components.set(textComponent)
     }
     
-    func addExpressionSpheres() {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        label.font = .systemFont(ofSize: 20)
-        label.text = "😁"
-        addSubview(label)
-        if let snapShot = label.snapshot, let data = snapShot.pngData() {
-            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let filePath = documentsDirectory.appendingPathComponent("temp.png")
-            try? data.write(to: filePath)
-            let anchorEntity = AnchorEntity(world: [0,0,-0.5])
-            let modelEntity = ModelEntity(mesh: .generateBox(size: 0.1))
-            guard let texture = try? TextureResource.load(contentsOf: filePath) else {return}
-            var material = UnlitMaterial()
-            material.baseColor = MaterialColorParameter.texture(texture)
-            modelEntity.model?.materials = [material]
-            anchorEntity.addChild(modelEntity)
-            scene.addAnchor(anchorEntity)
-        }
-
-    }
-    
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         for anchor in anchors {
             guard let faceAnchor = anchor as? ARFaceAnchor else { continue }
@@ -243,15 +212,5 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
                 delegate?.expressionDidChange(expression: .normal)
             }
         }
-    }
-}
-
-extension UIView {
-    var snapshot: UIImage? {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0.0)
-        drawHierarchy(in: bounds, afterScreenUpdates: true)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
     }
 }

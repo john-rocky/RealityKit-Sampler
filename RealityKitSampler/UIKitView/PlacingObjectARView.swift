@@ -19,9 +19,13 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     private var planeEntities: [UUID:ModelEntity] = [:]
     var physicsChanged: Bool = false
     
-    private var longPressedEntity: Entity?
-    private var longPress: Bool = false
     
+    var pannedEntity:ModelEntity?
+    var lastPan = CGPoint.zero
+    var materialXPan:Float = 0
+    var materialYPan:Float = 0
+    var twoFingerPhysicsChanged: Bool = false
+
 
     init(frame: CGRect, model: PlacingObjectModel) {
         super.init(frame: frame)
@@ -117,11 +121,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
             print(doubleFingerGesture.rotation)
         }
     }
-    
-    var pannedEntity:ModelEntity?
-    var lastPan = CGPoint.zero
-    var materialXPan:Float = 0
-    var materialYPan:Float = 0
+
     
     @objc func handlePan(sender: UIPanGestureRecognizer) {
         switch sender.state {
@@ -132,22 +132,22 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
             let location = sender.location(in: self)
             if let entity = self.entity(at: location) as? ModelEntity, !planeEntities.values.contains(entity) {
                 if entity.physicsBody?.mode == .dynamic {
-                    physicsChanged = true
+                    twoFingerPhysicsChanged = true
                     entity.physicsBody?.mode = .kinematic
                 }
                 pannedEntity = entity
             }
         case .changed:
             let newTranslation = sender.translation(in: self)
-            materialXPan = (Float(newTranslation.x) - Float(lastPan.x)) * -0.005
-            materialYPan = (Float(newTranslation.y) - Float(lastPan.y)) * -0.005
+            materialXPan = (Float(newTranslation.x) - Float(lastPan.x)) * -0.0025
+            materialYPan = (Float(newTranslation.y) - Float(lastPan.y)) * -0.0025
             guard let position = pannedEntity?.position else { return }
             pannedEntity?.position = [position.x - materialXPan,position.y + materialYPan, position.z]
             lastPan = newTranslation
             
         case .ended:
-            if physicsChanged {
-                physicsChanged = false
+            if twoFingerPhysicsChanged {
+                twoFingerPhysicsChanged = false
                 pannedEntity?.physicsBody?.mode = .dynamic
                 pannedEntity = nil
             }
