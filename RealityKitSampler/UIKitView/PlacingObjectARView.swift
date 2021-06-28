@@ -13,13 +13,9 @@ import AVFoundation
 
 class PlacingObjectARView: ARView, ARSessionDelegate {
 
-    var model:PlacingObjectModel! {
-        didSet {
-            print(model)
-        }
-    }
+    var model:PlacingObjectModel!
     var resolution:CGAffineTransform?
-    private var modelEntities: [ModelEntity] = []
+//    private var modelEntities: [ModelEntity] = []
     private var planeEntities: [UUID:ModelEntity] = [:]
     var physicsChanged: Bool = false
     
@@ -37,8 +33,9 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
 //        session.run(config, options: [])
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
         self.addGestureRecognizer(tapGesture)
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action:  #selector(handleLongPress(sender:)))
-        self.addGestureRecognizer(longPressGesture)
+        let pan = UIPanGestureRecognizer(target: self, action:  #selector(handlePan(sender:)))
+        pan.minimumNumberOfTouches = 2
+        self.addGestureRecognizer(pan)
     }
 
     required init?(coder decoder: NSCoder) {
@@ -67,7 +64,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                 let modelEntity = ModelEntity(mesh: generateMesh())
                 modelEntity.model?.materials = [generateMaterial()]
                 anchorEntity.addChild(modelEntity)
-                modelEntities.append(modelEntity)
+//                modelEntities.append(modelEntity)
                 modelEntity.generateCollisionShapes(recursive: true)
                 switch model.physics {
                 case ._kinematic:
@@ -102,7 +99,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                 if modelEntity.physicsBody?.mode == .dynamic {
                     physicsChanged = true
                     modelEntity.physicsBody?.mode = .kinematic
-                }                    
+                }
             case .ended:
                 guard let modelEntity = panGesture.entity as? ModelEntity else { return }
                 if physicsChanged {
@@ -121,24 +118,39 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
         }
     }
     
-    @objc func handleLongPress(sender: UILongPressGestureRecognizer) {
+    var pannedEntity:ModelEntity?
+    var lastPan = CGPoint.zero
+    var materialXPan:Float = 0
+    var materialYPan:Float = 0
+    
+    @objc func handlePan(sender: UIPanGestureRecognizer) {
         switch sender.state {
         case .began:
-            longPress = true
+            materialXPan = 0
+            materialYPan = 0
+            lastPan = CGPoint.zero
             let location = sender.location(in: self)
             if let entity = self.entity(at: location) as? ModelEntity, !planeEntities.values.contains(entity) {
-                entity.physicsBody?.mode = .kinematic
-                Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { Timer in
-                    if self.longPress {
-                        entity.position.y += 0.005
-                    } else {
-                        entity.physicsBody?.mode = .dynamic
-                        Timer.invalidate()
-                    }
+                if entity.physicsBody?.mode == .dynamic {
+                    physicsChanged = true
+                    entity.physicsBody?.mode = .kinematic
                 }
+                pannedEntity = entity
             }
+        case .changed:
+            let newTranslation = sender.translation(in: self)
+            materialXPan = (Float(newTranslation.x) - Float(lastPan.x)) * -0.005
+            materialYPan = (Float(newTranslation.y) - Float(lastPan.y)) * -0.005
+            guard let position = pannedEntity?.position else { return }
+            pannedEntity?.position = [position.x - materialXPan,position.y + materialYPan, position.z]
+            lastPan = newTranslation
+            
         case .ended:
-            longPress = false
+            if physicsChanged {
+                physicsChanged = false
+                pannedEntity?.physicsBody?.mode = .dynamic
+                pannedEntity = nil
+            }
         default: break
         }
 
@@ -167,7 +179,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
                 let size = getBoxSizeForImage()
                 mesh = .generatePlane(width: size.0, depth: size.1)
             default:
-                mesh = .generatePlane(width: 0.05, depth: 0.05)
+                mesh = .generatePlane(width: 0.1, depth: 0.1)
             }
         case .sphere:
             mesh = .generateSphere(radius: 0.025)
@@ -261,24 +273,19 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
         item.seek(to: CMTime.zero, completionHandler: nil)
     }
     
-    func addPhysics() {
-        for modelEntity in modelEntities {
-            modelEntity.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
-            modelEntity.generateCollisionShapes(recursive: false)
-        }
-    }
-    
-    func removePhysics() {
-        for modelEntity in modelEntities {
-            modelEntity.physicsBody = nil
-            modelEntity.collision = nil
-        }
-    }
-    
-    func setup() {
-        
-    }
-    
+//    func addPhysics() {
+//        for modelEntity in modelEntities {
+//            modelEntity.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
+//            modelEntity.generateCollisionShapes(recursive: false)
+//        }
+//    }
+//
+//    func removePhysics() {
+//        for modelEntity in modelEntities {
+//            modelEntity.physicsBody = nil
+//            modelEntity.collision = nil
+//        }
+//    }
     
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
         for anchor in anchors {
@@ -310,9 +317,9 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
 
 }
 
-extension ModelEntity {
-    func addPhysicsBody() {
-        physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
-        generateCollisionShapes(recursive: true)
-    }
-}
+//extension ModelEntity {
+//    func addPhysicsBody() {
+//        physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .dynamic)
+//        generateCollisionShapes(recursive: true)
+//    }
+//}
