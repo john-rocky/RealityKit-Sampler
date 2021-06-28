@@ -19,6 +19,8 @@ The simplest way to use the ModelEntity and AnchorEntity.
 ### 100-inch monitor
 How to select a video from your album and paste it as a texture.
 
+![Jun-28-2021 22-09-13](https://user-images.githubusercontent.com/23278992/123641992-c8f52800-d85d-11eb-918a-4619071a54c9.gif)
+
 ### Tap and Drag
 
 How to place objects of different shapes and colors.
