@@ -39,7 +39,7 @@ Interact body and AR object. With CoreML.
 
 The apple mark glows.
 
-### Shoot Opponent Device
+### Shoot The Device
 
 Multi Device AR Game.
 
