@@ -20,7 +20,8 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
     private var smileText:Entity!
     private var cheekLeft:ModelEntity!
     private var cheekRight:ModelEntity!
-    
+    private var cheekText:Entity!
+
     private var speechRecognizer:SFSpeechRecognizer?
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
@@ -54,6 +55,7 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
         smileText = faceScene.smileText
         cheekLeft = faceScene.cheekLeft?.children.first as! ModelEntity
         cheekRight = faceScene.cheekRight?.children.first as! ModelEntity
+        cheekText = faceScene.cheekText
         
         let smileColor = UIColor.init(cgColor: #colorLiteral(red: 1, green: 0.7907919884, blue: 0.9095974565, alpha: 0.147529118))
         smileLeft.model?.materials = [UnlitMaterial(color: smileColor)]
@@ -67,7 +69,8 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
         cheekRight.model?.materials = [UnlitMaterial(color: cheekColor)]
         cheekLeft.isEnabled = false
         cheekRight.isEnabled = false
-        
+        cheekText.isEnabled = false
+
         startSpeechRecognition()
     }
     
@@ -216,7 +219,8 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
 
                 cheekLeft.isEnabled = false
                 cheekRight.isEnabled = false
-                
+                cheekText.isEnabled = false
+
                 continue
             }
                 
@@ -232,7 +236,8 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
             case angry:
                 cheekLeft.isEnabled = true
                 cheekRight.isEnabled = true
-                
+                cheekText.isEnabled = true
+
             default:
                 break
             
