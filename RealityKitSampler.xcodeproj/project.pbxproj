@@ -15,6 +15,13 @@
 		73142192268819C600EBB446 /* KillMoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73142191268819C100EBB446 /* KillMoveView.swift */; };
 		7314219A26881F3400EBB446 /* KillMoveARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314219926881F3400EBB446 /* KillMoveARViewController.swift */; };
 		7314219C268AD62300EBB446 /* ExerciseClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7314219B268AD62200EBB446 /* ExerciseClassifier.mlmodel */; };
+		7314219E268BBB2200EBB446 /* KillMoveActionClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7314219D268BBB2200EBB446 /* KillMoveActionClassifier.mlmodel */; };
+		731421A0268BBD3C00EBB446 /* nmehameha.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7314219F268BBD3C00EBB446 /* nmehameha.mp3 */; };
+		731421A2268BC2B000EBB446 /* ShootTheDeviceARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731421A1268BC2B000EBB446 /* ShootTheDeviceARViewController.swift */; };
+		731421A4268BC2D300EBB446 /* ShootTheDeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731421A3268BC2D300EBB446 /* ShootTheDeviceView.swift */; };
+		731421A6268CA5FA00EBB446 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731421A5268CA5FA00EBB446 /* GameState.swift */; };
+		731421A8268D055900EBB446 /* HockeyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731421A7268D055900EBB446 /* HockeyBoard.swift */; };
+		731421AA268D0E9600EBB446 /* Tools.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = 731421A9268D0E9600EBB446 /* Tools.rcproject */; };
 		73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */; };
 		73F0ACD426803FE900199348 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD326803FE900199348 /* ContentView.swift */; };
 		73F0ACD626803FEB00199348 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73F0ACD526803FEB00199348 /* Assets.xcassets */; };
@@ -56,6 +63,13 @@
 		73142191268819C100EBB446 /* KillMoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KillMoveView.swift; sourceTree = "<group>"; };
 		7314219926881F3400EBB446 /* KillMoveARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KillMoveARViewController.swift; sourceTree = "<group>"; };
 		7314219B268AD62200EBB446 /* ExerciseClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ExerciseClassifier.mlmodel; sourceTree = "<group>"; };
+		7314219D268BBB2200EBB446 /* KillMoveActionClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = KillMoveActionClassifier.mlmodel; sourceTree = "<group>"; };
+		7314219F268BBD3C00EBB446 /* nmehameha.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = nmehameha.mp3; sourceTree = "<group>"; };
+		731421A1268BC2B000EBB446 /* ShootTheDeviceARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShootTheDeviceARViewController.swift; sourceTree = "<group>"; };
+		731421A3268BC2D300EBB446 /* ShootTheDeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShootTheDeviceView.swift; sourceTree = "<group>"; };
+		731421A5268CA5FA00EBB446 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		731421A7268D055900EBB446 /* HockeyBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HockeyBoard.swift; sourceTree = "<group>"; };
+		731421A9268D0E9600EBB446 /* Tools.rcproject */ = {isa = PBXFileReference; lastKnownFileType = file.rcproject; path = Tools.rcproject; sourceTree = "<group>"; };
 		73F0ACCE26803FE900199348 /* RealityKitSampler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealityKitSampler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealityKitSamplerApp.swift; sourceTree = "<group>"; };
 		73F0ACD326803FE900199348 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -130,10 +144,15 @@
 				73F0AD0A26817AAE00199348 /* SwiftUIView */,
 				73F0AD0B26817AE100199348 /* UIKitView */,
 				73F0ACFE26806ABC00199348 /* PlacingObjectModel.swift */,
+				731421A5268CA5FA00EBB446 /* GameState.swift */,
+				731421A7268D055900EBB446 /* HockeyBoard.swift */,
 				73F0AD0626814AEB00199348 /* windChimes.mp4 */,
+				7314219F268BBD3C00EBB446 /* nmehameha.mp3 */,
 				7314210F26856FB400EBB446 /* chihiro.jpeg */,
+				7314219D268BBB2200EBB446 /* KillMoveActionClassifier.mlmodel */,
 				7314219B268AD62200EBB446 /* ExerciseClassifier.mlmodel */,
 				731421152686935C00EBB446 /* face.rcproject */,
+				731421A9268D0E9600EBB446 /* Tools.rcproject */,
 				73F0ACD526803FEB00199348 /* Assets.xcassets */,
 				73F0ACDA26803FEB00199348 /* Info.plist */,
 				73F0ACD726803FEB00199348 /* Preview Content */,
@@ -176,6 +195,7 @@
 				7314210D268457E700EBB446 /* ImagePickerView.swift */,
 				7314211126868D5100EBB446 /* ExpressionsAndSpeechView.swift */,
 				73142191268819C100EBB446 /* KillMoveView.swift */,
+				731421A3268BC2D300EBB446 /* ShootTheDeviceView.swift */,
 			);
 			path = SwiftUIView;
 			sourceTree = "<group>";
@@ -187,6 +207,7 @@
 				73F0ACFC2680408400199348 /* PlacingObjectARView.swift */,
 				7314211326868D7000EBB446 /* ExpressionsAndSpeechARView.swift */,
 				7314219926881F3400EBB446 /* KillMoveARViewController.swift */,
+				731421A1268BC2B000EBB446 /* ShootTheDeviceARViewController.swift */,
 			);
 			path = UIKitView;
 			sourceTree = "<group>";
@@ -294,6 +315,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				731421A0268BBD3C00EBB446 /* nmehameha.mp3 in Resources */,
 				73F0AD0726814AFD00199348 /* windChimes.mp4 in Resources */,
 				73F0ACD926803FEB00199348 /* Preview Assets.xcassets in Resources */,
 				7314211026856FB400EBB446 /* chihiro.jpeg in Resources */,
@@ -324,18 +346,24 @@
 			files = (
 				73F0AD092681730200199348 /* OneHundredInchMonitorARViewController.swift in Sources */,
 				73142192268819C600EBB446 /* KillMoveView.swift in Sources */,
+				731421A4268BC2D300EBB446 /* ShootTheDeviceView.swift in Sources */,
+				731421A8268D055900EBB446 /* HockeyBoard.swift in Sources */,
 				73F0AD032680C4CB00199348 /* PlaceObjectView.swift in Sources */,
 				7314211226868D5100EBB446 /* ExpressionsAndSpeechView.swift in Sources */,
 				7314219C268AD62300EBB446 /* ExerciseClassifier.mlmodel in Sources */,
 				7314219A26881F3400EBB446 /* KillMoveARViewController.swift in Sources */,
+				731421A6268CA5FA00EBB446 /* GameState.swift in Sources */,
 				7314210E268457E700EBB446 /* ImagePickerView.swift in Sources */,
 				73F0ACFD2680408400199348 /* PlacingObjectARView.swift in Sources */,
 				73F0AD012680C47F00199348 /* JustPlaceBoxView.swift in Sources */,
 				73F0ACFF26806ABC00199348 /* PlacingObjectModel.swift in Sources */,
 				731421162686935C00EBB446 /* face.rcproject in Sources */,
 				73F0ACD426803FE900199348 /* ContentView.swift in Sources */,
+				7314219E268BBB2200EBB446 /* KillMoveActionClassifier.mlmodel in Sources */,
 				73F0AD052681441C00199348 /* OneHundredInchMonitorView.swift in Sources */,
+				731421A2268BC2B000EBB446 /* ShootTheDeviceARViewController.swift in Sources */,
 				73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */,
+				731421AA268D0E9600EBB446 /* Tools.rcproject in Sources */,
 				7314211426868D7000EBB446 /* ExpressionsAndSpeechARView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

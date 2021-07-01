@@ -2,7 +2,7 @@
 //  SwiftUIView.swift
 //  RealityKitSampler
 //
-//  Created by 間嶋大輔 on 2021/06/24.
+//  Created by Daisuke Majima on 2021/06/24.
 //
 
 import SwiftUI

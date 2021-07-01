@@ -2,7 +2,7 @@
 //  KillMoveARViewController.swift
 //  RealityKitSampler
 //
-//  Created by 間嶋大輔 on 2021/06/27.
+//  Created by Daisuke Majima on 2021/06/27.
 //
 
 import UIKit
@@ -14,6 +14,7 @@ import CoreML
 class KillMoveARViewController: UIViewController, ARSessionDelegate {
 
     private var arView: ARView!
+    
     private lazy var request: VNDetectHumanBodyPoseRequest = {
        let request = VNDetectHumanBodyPoseRequest()
         return request
@@ -35,13 +36,15 @@ class KillMoveARViewController: UIViewController, ARSessionDelegate {
         }
     }
     
-    var isReadyToMakePrediction: Bool {
+    private var isReadyToMakePrediction: Bool {
         posesWindow.count == predictionWindowSize
     }
     
-    var predictionWindowSize: Int = 64
+    private var predictionWindowSize: Int = 60
     
-    private var classifier = ExerciseClassifier()
+    private var classifier = KillMoveActionClassifier()
+    
+    private var audioPlayer:AVAudioPlayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,6 +92,23 @@ class KillMoveARViewController: UIViewController, ARSessionDelegate {
         // Set every element to zero.
         pointer.initialize(repeating: 0.0)
         return array
+    }
+    
+    func killMove(prediction:KillMoveActionClassifierOutput) {
+        switch prediction.label {
+        case "Nmehameha":
+            do {
+                guard let url = Bundle.main.url(forResource: "Nmehameha", withExtension: "mp3") else {
+                    print("couldn't play sound"); return
+                }
+                audioPlayer = try AVAudioPlayer(contentsOf: url)
+                audioPlayer?.play()
+            } catch let error {
+                print(error)
+            }
+            
+        default:break
+        }
     }
 
     

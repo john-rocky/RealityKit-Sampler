@@ -2,7 +2,7 @@
 //  OneHundredInchMonitorARView.swift
 //  RealityKitSampler
 //
-//  Created by 間嶋大輔 on 2021/06/22.
+//  Created by Daisuke Majima on 2021/06/22.
 //
 
 import UIKit
