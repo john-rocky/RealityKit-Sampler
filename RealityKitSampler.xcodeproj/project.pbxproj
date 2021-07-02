@@ -22,6 +22,8 @@
 		731421A6268CA5FA00EBB446 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731421A5268CA5FA00EBB446 /* GameState.swift */; };
 		731421A8268D055900EBB446 /* HockeyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731421A7268D055900EBB446 /* HockeyBoard.swift */; };
 		731421AA268D0E9600EBB446 /* Tools.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = 731421A9268D0E9600EBB446 /* Tools.rcproject */; };
+		731421AC268E11ED00EBB446 /* FaceCropperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731421AB268E11EA00EBB446 /* FaceCropperView.swift */; };
+		731421AE268E12BB00EBB446 /* FaceCropperARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731421AD268E12BA00EBB446 /* FaceCropperARViewController.swift */; };
 		73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */; };
 		73F0ACD426803FE900199348 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD326803FE900199348 /* ContentView.swift */; };
 		73F0ACD626803FEB00199348 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73F0ACD526803FEB00199348 /* Assets.xcassets */; };
@@ -70,6 +72,8 @@
 		731421A5268CA5FA00EBB446 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		731421A7268D055900EBB446 /* HockeyBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HockeyBoard.swift; sourceTree = "<group>"; };
 		731421A9268D0E9600EBB446 /* Tools.rcproject */ = {isa = PBXFileReference; lastKnownFileType = file.rcproject; path = Tools.rcproject; sourceTree = "<group>"; };
+		731421AB268E11EA00EBB446 /* FaceCropperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceCropperView.swift; sourceTree = "<group>"; };
+		731421AD268E12BA00EBB446 /* FaceCropperARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceCropperARViewController.swift; sourceTree = "<group>"; };
 		73F0ACCE26803FE900199348 /* RealityKitSampler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealityKitSampler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealityKitSamplerApp.swift; sourceTree = "<group>"; };
 		73F0ACD326803FE900199348 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -196,6 +200,7 @@
 				7314211126868D5100EBB446 /* ExpressionsAndSpeechView.swift */,
 				73142191268819C100EBB446 /* KillMoveView.swift */,
 				731421A3268BC2D300EBB446 /* ShootTheDeviceView.swift */,
+				731421AB268E11EA00EBB446 /* FaceCropperView.swift */,
 			);
 			path = SwiftUIView;
 			sourceTree = "<group>";
@@ -208,6 +213,7 @@
 				7314211326868D7000EBB446 /* ExpressionsAndSpeechARView.swift */,
 				7314219926881F3400EBB446 /* KillMoveARViewController.swift */,
 				731421A1268BC2B000EBB446 /* ShootTheDeviceARViewController.swift */,
+				731421AD268E12BA00EBB446 /* FaceCropperARViewController.swift */,
 			);
 			path = UIKitView;
 			sourceTree = "<group>";
@@ -362,6 +368,8 @@
 				7314219E268BBB2200EBB446 /* KillMoveActionClassifier.mlmodel in Sources */,
 				73F0AD052681441C00199348 /* OneHundredInchMonitorView.swift in Sources */,
 				731421A2268BC2B000EBB446 /* ShootTheDeviceARViewController.swift in Sources */,
+				731421AC268E11ED00EBB446 /* FaceCropperView.swift in Sources */,
+				731421AE268E12BB00EBB446 /* FaceCropperARViewController.swift in Sources */,
 				73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */,
 				731421AA268D0E9600EBB446 /* Tools.rcproject in Sources */,
 				7314211426868D7000EBB446 /* ExpressionsAndSpeechARView.swift in Sources */,

@@ -43,6 +43,11 @@ struct ContentView: View {
                     label: {
                         Text("Shoot The Device")
                     })
+                NavigationLink(
+                    destination: FaceCropperView(),
+                    label: {
+                        Text("Face Cropper")
+                    })
             }
         }.navigationBarTitle("")
         .navigationBarHidden(true)

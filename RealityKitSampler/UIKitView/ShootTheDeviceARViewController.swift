@@ -33,8 +33,12 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
     var browsingTime: Int?
     var isHost: Bool?
     var gameState = GameState()
+    var boardAdded = false
     
-    var hockeyBoard: Tools._Tools!
+    lazy var hockeyBoard: Tools._Tools = {
+        let scene = try! Tools.load_Tools()
+        return scene
+    }()
     
     var puck: ModelEntity!
     var hostStriker: ModelEntity!
@@ -86,10 +90,11 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
         config.planeDetection = [.horizontal]
         config.isCollaborationEnabled = true
         arView.session.run(config, options: [])
+                    setupTable()
+
     }
     
     func setupTable() {
-        hockeyBoard = try! Tools.load_Tools()
         puck = hockeyBoard.puck?.children.first as! ModelEntity
         hostStriker = hockeyBoard.hostStriker?.children.first as! ModelEntity
         guestStriker = hockeyBoard.guestStriker?.children.first as! ModelEntity
@@ -197,16 +202,38 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
         tableMinZ = -tableSize.z / 2
         tableMaxZ = tableSize.z / 2
         
-        arView.scene.addAnchor(hockeyBoard)
+        
+        puck.removeFromParent()
+//        hostStriker.removeFromParent()
+//        guestStriker.removeFromParent()
+        
+        let arPuckAnchor = ARAnchor(transform: hockeyBoard.transformMatrix(relativeTo: nil))
+        arView.session.add(anchor: arPuckAnchor)
+        puckAnchor = AnchorEntity(anchor: arPuckAnchor)
+        arView.scene.addAnchor(puckAnchor)
+        puckAnchor.addChild(puck)
         
         arView.installGestures(.translation, for: hostStriker!)
     }
+    
+    var puckAnchor:AnchorEntity!
     
     @objc func tapped(sender: UITapGestureRecognizer) {
         let location = sender.location(in: arView)
         let results = arView.raycast(from: location, allowing: .estimatedPlane, alignment: .any)
         if results.first != nil {
-            setupTable()
+            let arAnchor = ARAnchor(transform: results.first!.worldTransform)
+            arView.session.add(anchor: arAnchor)
+            
+            let anchor = AnchorEntity(anchor: arAnchor)
+            let box = ModelEntity(mesh: .generateBox(size: 0.1), materials: [SimpleMaterial(color: .black, isMetallic: true)])
+//            let hockeyBoard = HockeyBoard(width: 0.2, depth: 0.3)
+            hockeyBoard = try! Tools.load_Tools()
+            anchor.addChild(hockeyBoard)
+
+            arView.scene.addAnchor(anchor)
+
+            boardAdded = true
         }
     }
     
@@ -223,6 +250,10 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         if tableMinX != nil {
+            
+            print(puckAnchor.position)
+            print(hostStriker.parent?.position)
+            
             let out:Bool = puck.position.x < tableMinX! || puck.position.x > tableMaxX! || puck.position.z < tableMinZ! || puck.position.z > tableMaxZ!
             if out {
                 puck.removeFromParent()
