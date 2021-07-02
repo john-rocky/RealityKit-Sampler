@@ -39,7 +39,7 @@ Interact body and AR object. With CoreML.
 
 Detect a face then crop.
 
-![Jul-03-2021 04-55-27](https://user-images.githubusercontent.com/23278992/124323106-b3646300-dbbb-11eb-85e0-510154b72b5d.gif)
+![Jul-03-2021 05-00-23](https://user-images.githubusercontent.com/23278992/124336683-e158a000-dbd9-11eb-8a00-5c2943daefcb.gif)
 
 ### Shoot The Device
 
