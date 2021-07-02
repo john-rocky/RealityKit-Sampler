@@ -35,9 +35,9 @@ Visualize facial expressions and what you say.
 
 Interact body and AR object. With CoreML.
 
-### Light Apple 
+### Face Cropper
 
-The apple mark glows.
+Detect a face then crop.
 
 ### Shoot The Device
 
@@ -53,7 +53,7 @@ Multi Device AR Game.
 | Tap and Drag | Ray Cast, Hit Test, Handle Gestures, Physics, Collision, TextureResource |
 | Expressions and Speech | Face Anchor, ARSessionDelegate, Deal with RealityComposer |
 | Kill Move | Body Anchor |
-| Light Apple | Image Anchor |
+| Face Cropper | Image Anchor |
 | Multi Device AR Game | Collaborate Session |
 
 ## Author
