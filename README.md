@@ -39,6 +39,8 @@ Interact body and AR object. With CoreML.
 
 Detect a face then crop.
 
+![Jul-03-2021 04-55-27](https://user-images.githubusercontent.com/23278992/124323106-b3646300-dbbb-11eb-85e0-510154b72b5d.gif)
+
 ### Shoot The Device
 
 Multi Device AR Game.
