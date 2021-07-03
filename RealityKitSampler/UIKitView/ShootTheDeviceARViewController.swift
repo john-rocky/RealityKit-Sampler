@@ -35,10 +35,12 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
     var gameState = GameState()
     var boardAdded = false
     
-    lazy var hockeyBoard: Tools._Tools = {
+    lazy var sceneElement: Tools._Tools = {
         let scene = try! Tools.load_Tools()
         return scene
     }()
+    
+    var anchor:AnchorEntity!
     
     var puck: ModelEntity!
     var hostStriker: ModelEntity!
@@ -94,10 +96,14 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
 
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
     func setupTable() {
-        puck = hockeyBoard.puck?.children.first as! ModelEntity
-        hostStriker = hockeyBoard.hostStriker?.children.first as! ModelEntity
-        guestStriker = hockeyBoard.guestStriker?.children.first as! ModelEntity
+        puck = sceneElement.puck?.children.first as! ModelEntity
+        hostStriker = sceneElement.hostStriker?.children.first as! ModelEntity
+        guestStriker = sceneElement.guestStriker?.children.first as! ModelEntity
         puck.generateCollisionShapes(recursive: true)
         puck.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .generate(friction: 0.1, restitution: 0.7), mode: .dynamic)
         
@@ -107,16 +113,16 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
         guestStriker.generateCollisionShapes(recursive: true)
         guestStriker.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .default, mode: .kinematic)
         
-        table = hockeyBoard.table?.children.first as! ModelEntity
+        table = sceneElement.table?.children.first as! ModelEntity
         table.generateCollisionShapes(recursive: true)
         table.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .generate(friction: 0, restitution: 0), mode: .static)
         
-        wallBack1 = hockeyBoard.wallBack1?.children.first as! ModelEntity
-        wallBack2 = hockeyBoard.wallBack2?.children.first as? ModelEntity
-        wallFront1 = hockeyBoard.wallFront1?.children.first as! ModelEntity
-        wallFront2 = hockeyBoard.wallFront2?.children.first as! ModelEntity
-        wallLeft = hockeyBoard.wallLeft?.children.first as! ModelEntity
-        wallRight = hockeyBoard.wallRight?.children.first as! ModelEntity
+        wallBack1 = sceneElement.wallBack1?.children.first as! ModelEntity
+        wallBack2 = sceneElement.wallBack2?.children.first as? ModelEntity
+        wallFront1 = sceneElement.wallFront1?.children.first as! ModelEntity
+        wallFront2 = sceneElement.wallFront2?.children.first as! ModelEntity
+        wallLeft = sceneElement.wallLeft?.children.first as! ModelEntity
+        wallRight = sceneElement.wallRight?.children.first as! ModelEntity
         
         wallLeft.generateCollisionShapes(recursive: true)
         wallRight.generateCollisionShapes(recursive: true)
@@ -127,8 +133,8 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
 
         wallLeft.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .generate(friction: 0.9, restitution: 0.9), mode: .kinematic)
 
-        hostGoal = hockeyBoard.hostGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
-        guestGoal = hockeyBoard.guestGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
+        hostGoal = sceneElement.hostGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
+        guestGoal = sceneElement.guestGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
         
         hostGoal.generateCollisionShapes(recursive: true)
         guestGoal.generateCollisionShapes(recursive: true)
@@ -203,17 +209,16 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
         tableMaxZ = tableSize.z / 2
         
         
-        puck.removeFromParent()
+//        puck.removeFromParent()
 //        hostStriker.removeFromParent()
 //        guestStriker.removeFromParent()
+//
+//        let arPuckAnchor = ARAnchor(transform: sceneElement.transformMatrix(relativeTo: nil))
+//        arView.session.add(anchor: arPuckAnchor)
+//        puckAnchor = AnchorEntity(anchor: arPuckAnchor)
+//        arView.scene.addAnchor(puckAnchor)
+//        puckAnchor.addChild(puck)
         
-        let arPuckAnchor = ARAnchor(transform: hockeyBoard.transformMatrix(relativeTo: nil))
-        arView.session.add(anchor: arPuckAnchor)
-        puckAnchor = AnchorEntity(anchor: arPuckAnchor)
-        arView.scene.addAnchor(puckAnchor)
-        puckAnchor.addChild(puck)
-        
-        arView.installGestures(.translation, for: hostStriker!)
     }
     
     var puckAnchor:AnchorEntity!
@@ -225,13 +230,41 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
             let arAnchor = ARAnchor(transform: results.first!.worldTransform)
             arView.session.add(anchor: arAnchor)
             
-            let anchor = AnchorEntity(anchor: arAnchor)
+            anchor = AnchorEntity(anchor: arAnchor)
             let box = ModelEntity(mesh: .generateBox(size: 0.1), materials: [SimpleMaterial(color: .black, isMetallic: true)])
 //            let hockeyBoard = HockeyBoard(width: 0.2, depth: 0.3)
-            hockeyBoard = try! Tools.load_Tools()
-            anchor.addChild(hockeyBoard)
+            
+            wallFront1.position = [-0.0666,0.01,-0.151]
+            wallFront2.position = [0.0686,0.01,-0.151]
+            wallBack1.position = [-0.0666,0.01,0.151]
+            wallBack2.position = [0.067,0.01,0.151]
+            wallLeft.position = [-0.099,0.01,0]
+            wallRight.position = [0.101,0.01,0]
+            hostGoal.position = [0,-0.0072,0.1653]
+            guestGoal.position = [0,-000.72,-0.1653]
+            hostGoal.scale = [0.02,0.02,0.02]
+            guestGoal.scale = [0.02,0.02,0.02]
+            wallFront1.scale = [0.94,0.94,0.94]
+            wallFront2.scale = [0.94,0.94,0.94]
+            wallBack1.scale = [0.94,0.94,0.94]
+            wallBack2.scale = [0.94,0.94,0.94]
+            hostStriker.position = [0.0072,0.01,0.1084]
+            guestStriker.position = [0.0024,0.01,-0.1019]
+            anchor.addChild(table)
+            anchor.addChild(wallFront1)
+            anchor.addChild(wallFront2)
+            anchor.addChild(wallBack1)
+            anchor.addChild(wallBack2)
+            anchor.addChild(wallLeft)
+            anchor.addChild(wallRight)
+//            anchor.addChild(hostGoal)
+//            anchor.addChild(guestGoal)
+            anchor.addChild(hostStriker)
+            anchor.addChild(guestStriker)
+            anchor.addChild(puck)
 
             arView.scene.addAnchor(anchor)
+            arView.installGestures(.translation, for: hostStriker!)
 
             boardAdded = true
         }
@@ -250,16 +283,13 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         if tableMinX != nil {
-            
-            print(puckAnchor.position)
-            print(hostStriker.parent?.position)
-            
+            print(puck.position)
             let out:Bool = puck.position.x < tableMinX! || puck.position.x > tableMaxX! || puck.position.z < tableMinZ! || puck.position.z > tableMaxZ!
             if out {
                 puck.removeFromParent()
                 puck.position = [0,0.05,0]
                 puck.orientation = simd_quatf(angle: 0, axis: [1,1,1])
-                hockeyBoard.addChild(puck)
+                anchor.addChild(puck)
             }
         }
     }

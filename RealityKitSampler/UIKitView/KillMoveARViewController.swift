@@ -9,40 +9,11 @@ import UIKit
 import RealityKit
 import ARKit
 import Vision
-import CoreML
 
 class KillMoveARViewController: UIViewController, ARSessionDelegate {
 
     private var arView: ARView!
-    
-    private lazy var request: VNDetectHumanBodyPoseRequest = {
-       let request = VNDetectHumanBodyPoseRequest()
-        return request
-    }()
-    
-    private lazy var posesWindow:[VNRecognizedPointsObservation?] = {
-       var window = [VNRecognizedPointsObservation?]()
-        window.reserveCapacity(predictionWindowSize)
-        return window
-    }() {
-        didSet {
-            if isReadyToMakePrediction {
-                do {
-                    try makePrediction()
-                } catch let error {
-                    print(error)
-                }
-            }
-        }
-    }
-    
-    private var isReadyToMakePrediction: Bool {
-        posesWindow.count == predictionWindowSize
-    }
-    
-    private var predictionWindowSize: Int = 60
-    
-    private var classifier = KillMoveActionClassifier()
+
     
     private var audioPlayer:AVAudioPlayer?
     
@@ -58,72 +29,7 @@ class KillMoveARViewController: UIViewController, ARSessionDelegate {
         // Do any additional setup after loading the view.
     }
     
-    
-    func makePrediction() throws {
-        let poseMultiArrays: [MLMultiArray] = try posesWindow.map { person in
-            guard let person = person else {
-                return makeZeroedMultiArray()
-            }
-            return try person.keypointsMultiArray()
-        }
-        
-        let modelInput = MLMultiArray(concatenating: poseMultiArrays, axis: 0, dataType: .float)
-        let prediction = try classifier.prediction(poses: modelInput)
-        
-        posesWindow.removeAll()
-        
-        print(prediction.label)
-        print(prediction.labelProbabilities[prediction.label])
-    }
-    
-    private func makeZeroedMultiArray() -> MLMultiArray {
-        // Create the multiarray.
-        let shape:[Int] =  [1,3,18]
-        guard let array = try? MLMultiArray(shape: shape as [NSNumber],
-                                            dataType: .double) else {
-            fatalError("Creating a multiarray with \(shape) shouldn't fail.")
-        }
-
-        // Get a pointer to quickly set the array's values.
-        guard let pointer = try? UnsafeMutableBufferPointer<Double>(array) else {
-            fatalError("Unable to initialize multiarray with zeros.")
-        }
-
-        // Set every element to zero.
-        pointer.initialize(repeating: 0.0)
-        return array
-    }
-    
-    func killMove(prediction:KillMoveActionClassifierOutput) {
-        switch prediction.label {
-        case "Nmehameha":
-            do {
-                guard let url = Bundle.main.url(forResource: "Nmehameha", withExtension: "mp3") else {
-                    print("couldn't play sound"); return
-                }
-                audioPlayer = try AVAudioPlayer(contentsOf: url)
-                audioPlayer?.play()
-            } catch let error {
-                print(error)
-            }
-            
-        default:break
-        }
-    }
-
-    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        let capturedImage = frame.capturedImage
-        DispatchQueue.global(qos: .userInitiated).async { [self] in
-            do {
-                let handler = try VNImageRequestHandler(cvPixelBuffer: capturedImage)
-                try handler.perform([request])
-                let poses = request.results as [VNRecognizedPointsObservation]?
-                posesWindow.append(poses?.first)
-            } catch let error {
-                print(error)
-            }
-        }
     }
 
     var handAnchor:AnchorEntity = AnchorEntity()
@@ -138,11 +44,30 @@ class KillMoveARViewController: UIViewController, ARSessionDelegate {
         }
     }
     
+    var isPlayingAudio = false
+    
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         for anchor in anchors {
             guard let bodyAnchor = anchor as? ARBodyAnchor,
-                  let hand = bodyAnchor.skeleton.modelTransform(for: .rightHand) else { continue }
-            let handTransform = bodyAnchor.transform * hand
+                  let rightHand = bodyAnchor.skeleton.modelTransform(for: .rightHand)else { continue }
+            let rightHandPosition = rightHand.columns.3.x
+            if rightHandPosition < -0.4 || rightHandPosition > 0.4, !isPlayingAudio {
+                isPlayingAudio = true
+                do {
+                    guard let url = Bundle.main.url(forResource: "nmehameha", withExtension: "mp3") else {
+                        print("couldn't play sound"); return
+                    }
+                    audioPlayer = try AVAudioPlayer(contentsOf: url)
+                    audioPlayer?.play()
+                    Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { Timer in
+                        self.isPlayingAudio = false
+                    }
+                } catch let error {
+                    print(error)
+                }
+            }
+
+            let handTransform = bodyAnchor.transform * rightHand
             handAnchor.transform = Transform(matrix: handTransform)
             
         }
