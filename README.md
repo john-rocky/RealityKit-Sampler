@@ -12,20 +12,25 @@ RealityKitSampler is the sample　collection of the basic functions of RealityKi
 ## Contents
 
 ### Just put the box
-The simplest way to use the ModelEntity and AnchorEntity.
 
 <img width="262" alt="スクリーンショット 2021-06-22 6 25 04" src="https://user-images.githubusercontent.com/23278992/122830079-cc028c80-d322-11eb-87a3-8aa4803860a4.png">
 
+The simplest way to use the ModelEntity and AnchorEntity.
+
+
 ### 100-inch monitor
-How to select a video from your album and paste it as a texture.
 
 ![Jun-28-2021 22-09-13](https://user-images.githubusercontent.com/23278992/123641992-c8f52800-d85d-11eb-918a-4619071a54c9.gif)
 
+How to select a video from your album and paste it as a texture.
+
+
 ### Building blocks
+
+![Jun-28-2021 22-27-24](https://user-images.githubusercontent.com/23278992/123644152-11ade080-d860-11eb-828f-68e86ac8ee28.gif)
 
 How to place objects of different shapes and colors.
 
-![Jun-28-2021 22-27-24](https://user-images.githubusercontent.com/23278992/123644152-11ade080-d860-11eb-828f-68e86ac8ee28.gif)
 
 ### Expressions and Speech
 
@@ -37,7 +42,10 @@ Interact body and AR object. With CoreML.
 
 ### Face Cropper
 
+![Jul-03-2021 05-00-23](https://user-images.githubusercontent.com/23278992/124336683-e158a000-dbd9-11eb-8a00-5c2943daefcb.gif)
+
 Detect a face then crop.
+
 
 ### Shoot The Device
 
