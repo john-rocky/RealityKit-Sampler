@@ -13,7 +13,8 @@ struct OneHundredInchMonitorView: View {
     
     var body: some View {
         ZStack {
-            OneHundredInchMonitorContainerView(didTap: $didTap)
+            OneHundredInchMonitorARViewContainer(didTap: $didTap)
+                .edgesIgnoringSafeArea(.all)
             VStack {
                 Spacer()
                 Button(action: didTapButton, label: {
@@ -26,14 +27,6 @@ struct OneHundredInchMonitorView: View {
     
     func didTapButton() {
         didTap = true
-    }
-}
-
-struct OneHundredInchMonitorContainerView: View {
-    @Binding var didTap:Bool
-    var body: some View {
-        return OneHundredInchMonitorARViewContainer(didTap: $didTap)
-            .edgesIgnoringSafeArea(.all)
     }
 }
 
@@ -57,11 +50,5 @@ struct OneHundredInchMonitorARViewContainer: UIViewControllerRepresentable {
     
     class Coordinator {
         
-    }
-}
-
-struct ContainerView_Previews: PreviewProvider {
-    static var previews: some View {
-        OneHundredInchMonitorView()
     }
 }

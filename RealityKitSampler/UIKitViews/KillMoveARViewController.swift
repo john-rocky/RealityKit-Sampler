@@ -55,7 +55,6 @@ class KillMoveARViewController: UIViewController, ARSessionDelegate {
         arView.session.run(config, options: [])
         arView.scene.addAnchor(handAnchor)
         arView.scene.addAnchor(leftHandAnchor)
-        print(config.isLightEstimationEnabled)
 
     }
     

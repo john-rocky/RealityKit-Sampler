@@ -18,7 +18,7 @@ struct PlaceObjectView: View {
     var body: some View {
         
         ZStack {
-            ARContainerView(model: $model)
+            ARViewContainer(model: $model)
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
@@ -122,15 +122,6 @@ struct PlaceObjectView: View {
         }
     }
 }
-
-struct ARContainerView: View {
-    @Binding var model:PlacingObjectModel
-    var body: some View {
-        return ARViewContainer(model: $model)
-            .edgesIgnoringSafeArea(.all)
-    }
-}
-
 
 struct ARViewContainer: UIViewRepresentable {
     @Binding var model:PlacingObjectModel
