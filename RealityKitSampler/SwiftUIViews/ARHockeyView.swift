@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ShootTheDeviceView: View {
+struct ARHockeyView: View {
     @State var isHost:Bool?
     @State var gameStateText:String = ""
     
@@ -48,13 +48,13 @@ struct ShootTheDeviceARViewContainer: UIViewControllerRepresentable {
 
     @Binding var isHost:Bool?
     
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ShootTheDeviceARViewContainer>) -> ShootTheDeviceARViewController {
-        let viewController = ShootTheDeviceARViewController()
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ShootTheDeviceARViewContainer>) -> ARHockeyARViewController {
+        let viewController = ARHockeyARViewController()
         viewController.delegate = context.coordinator
         return viewController
     }
 
-    func updateUIViewController(_ uiViewController: ShootTheDeviceARViewController, context: UIViewControllerRepresentableContext<ShootTheDeviceARViewContainer>) {
+    func updateUIViewController(_ uiViewController: ARHockeyARViewController, context: UIViewControllerRepresentableContext<ShootTheDeviceARViewContainer>) {
 
     }
     
@@ -62,7 +62,7 @@ struct ShootTheDeviceARViewContainer: UIViewControllerRepresentable {
         return Coordinator(isHost: $isHost)
     }
     
-    class Coordinator: NSObject, ShootTheDeviceARViewControllerDelegate {
+    class Coordinator: NSObject, ARHockeyARViewControllerDelegate {
         
         @Binding var isHost:Bool?
         
@@ -83,6 +83,6 @@ struct ShootTheDeviceARViewContainer: UIViewControllerRepresentable {
 }
 struct ShootTheDeviceView_Previews: PreviewProvider {
     static var previews: some View {
-        ShootTheDeviceView()
+        ARHockeyView()
     }
 }

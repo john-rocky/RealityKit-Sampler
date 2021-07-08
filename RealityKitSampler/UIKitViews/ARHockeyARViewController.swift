@@ -11,14 +11,14 @@ import ARKit
 import MultipeerConnectivity
 import Combine
 
-protocol ShootTheDeviceARViewControllerDelegate:NSObjectProtocol {
+protocol ARHockeyARViewControllerDelegate:NSObjectProtocol {
     func connected(isHost:Bool)
     func gameStateChanged(state:GameState)
 }
 
-class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate {
+class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate {
     
-    weak var delegate: ShootTheDeviceARViewControllerDelegate?
+    weak var delegate: ARHockeyARViewControllerDelegate?
     
     var arView:ARView!
     
@@ -34,6 +34,9 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
     var isHost: Bool?
     var gameState = GameState()
     var boardAdded = false
+    
+    private var hapticsManager = HapticsManager()
+    var audioPlaybackController:AudioPlaybackController!
     
     lazy var sceneElement: Tools._Tools = {
         let scene = try! Tools.load_Tools()
@@ -77,11 +80,11 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
 
         session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
         session.delegate = self
-        serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: nil, serviceType: ShootTheDeviceARViewController.serviceType)
+        serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: nil, serviceType: ARHockeyARViewController.serviceType)
         serviceAdvertiser.delegate = self
         serviceAdvertiser.startAdvertisingPeer()
         
-        serviceBrowser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: ShootTheDeviceARViewController.serviceType)
+        serviceBrowser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: ARHockeyARViewController.serviceType)
         serviceBrowser.delegate = self
         serviceBrowser.startBrowsingForPeers()
         
@@ -90,9 +93,12 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
         
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal]
+        config.environmentTexturing = .automatic
         config.isCollaborationEnabled = true
         arView.session.run(config, options: [])
-                    setupTable()
+        setupTable()
+        
+        hapticsManager.createEngine()
 
     }
     
@@ -133,18 +139,34 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
 
         wallLeft.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .generate(friction: 0.9, restitution: 0.9), mode: .kinematic)
 
+        let goal = ModelEntity(mesh: .generateBox(size: <#T##SIMD3<Float>#>), materials: <#T##[Material]#>)
+        
         hostGoal = sceneElement.hostGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
         guestGoal = sceneElement.guestGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
         
         hostGoal.generateCollisionShapes(recursive: true)
         guestGoal.generateCollisionShapes(recursive: true)
-        print(hostGoal.children)
-        print(hostGoal.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.name)
-
+        
+        do {
+            let audioResource = try AudioFileResource.load(named: "Collision.mp3",
+                                                           in: nil,
+                                                           inputMode: .spatial,
+                                                           loadingStrategy: .preload,
+                                                           shouldLoop: false)
+            
+            audioPlaybackController = puck.prepareAudio(audioResource)
+            
+        } catch {
+            print("Error loading audio file")
+        }
+        
         // Sorry about this simple imitation of table force.
         
         collisionSub = arView.scene.subscribe(to: CollisionEvents.Began.self, { [self] event in
+            hapticsManager.playHapticTransient()
+            audioPlaybackController.stop()
             
+            audioPlaybackController.play()
             // wall
             
             if event.entityA == wallLeft, event.entityB == puck {
@@ -208,17 +230,6 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
         tableMinZ = -tableSize.z / 2
         tableMaxZ = tableSize.z / 2
         
-        
-//        puck.removeFromParent()
-//        hostStriker.removeFromParent()
-//        guestStriker.removeFromParent()
-//
-//        let arPuckAnchor = ARAnchor(transform: sceneElement.transformMatrix(relativeTo: nil))
-//        arView.session.add(anchor: arPuckAnchor)
-//        puckAnchor = AnchorEntity(anchor: arPuckAnchor)
-//        arView.scene.addAnchor(puckAnchor)
-//        puckAnchor.addChild(puck)
-        
     }
     
     var puckAnchor:AnchorEntity!
@@ -232,7 +243,6 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
             
             anchor = AnchorEntity(anchor: arAnchor)
             let box = ModelEntity(mesh: .generateBox(size: 0.1), materials: [SimpleMaterial(color: .black, isMetallic: true)])
-//            let hockeyBoard = HockeyBoard(width: 0.2, depth: 0.3)
             
             wallFront1.position = [-0.0666,0.01,-0.151]
             wallFront2.position = [0.0686,0.01,-0.151]
@@ -257,8 +267,6 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
             anchor.addChild(wallBack2)
             anchor.addChild(wallLeft)
             anchor.addChild(wallRight)
-//            anchor.addChild(hostGoal)
-//            anchor.addChild(guestGoal)
             anchor.addChild(hostStriker)
             anchor.addChild(guestStriker)
             anchor.addChild(puck)
@@ -283,7 +291,6 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         if tableMinX != nil {
-            print(puck.position)
             let out:Bool = puck.position.x < tableMinX! || puck.position.x > tableMaxX! || puck.position.z < tableMinZ! || puck.position.z > tableMaxZ!
             if out {
                 puck.removeFromParent()
@@ -331,17 +338,13 @@ class ShootTheDeviceARViewController: UIViewController, ARSessionDelegate, MCSes
         guard let invitationTime = Int(invitationTimeString) else {return}
         isHost = browsingTime < invitationTime
         delegate?.connected(isHost: isHost!)
-        print(browsingTime)
-        print(invitationTime)
         invitationHandler(true, self.session)
-        print(peerID)
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         guard let browsingTime = browsingTime else {return}
         let timeData = browsingTime.description.data(using: .ascii)
         browser.invitePeer(peerID, to: session, withContext: timeData, timeout: 10)
-        print(peerID)
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {

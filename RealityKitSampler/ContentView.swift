@@ -47,9 +47,9 @@ struct ContentView: View {
                             Text("Special Move")
                         })
                     NavigationLink(
-                        destination: ShootTheDeviceView(),
+                        destination: ARHockeyView(),
                         label: {
-                            Text("Shoot The Device")
+                            Text("AR Hockey")
                         })
                     NavigationLink(
                         destination: FaceCropperView(),

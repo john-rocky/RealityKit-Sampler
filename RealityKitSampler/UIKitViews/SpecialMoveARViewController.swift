@@ -121,25 +121,22 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
         
         cylinder.move(to: Transform(scale: [1,300,1], translation: [0,-1.5*direction,0]), relativeTo: cylinder, duration: 3, timingFunction: .easeInOut)
         destinationSphere.move(to: Transform(translation: [0,-3*direction,0]), relativeTo: cylinder, duration: 3, timingFunction: .easeInOut)
-
-            do {
-                let audioResource = try AudioFileResource.load(named: "nmehameha.mp3",
-                                                               in: nil,
-                                                               inputMode: .spatial,
-                                                               loadingStrategy: .preload,
-                                                               shouldLoop: false)
-
-                let audioPlaybackController = originSphere.prepareAudio(audioResource)
-                audioPlaybackController.completionHandler = {
-                    audioPlaybackController.stop()
-                }
-                    audioPlaybackController.play()
-            } catch {
-                print("Error loading audio file")
-            }
-
-            Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { timer in
-                UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1, delay: 0, options: [.curveEaseInOut]) {
+        
+        do {
+            let audioResource = try AudioFileResource.load(named: "explosion.mp3",
+                                                           in: nil,
+                                                           inputMode: .spatial,
+                                                           loadingStrategy: .preload,
+                                                           shouldLoop: false)
+            
+            let audioPlaybackController = originSphere.prepareAudio(audioResource)
+            audioPlaybackController.play()
+        } catch {
+            print("Error loading audio file")
+        }
+        
+        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { timer in
+            UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1, delay: 0, options: [.curveEaseInOut]) {
                     self.arView.alpha = 0
                 } completion: { UIViewAnimatingPosition in
                     originSphere.isEnabled = false
