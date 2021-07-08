@@ -22,6 +22,11 @@ struct ContentView: View {
                             Text("Just Place A Box")
                         })
                     NavigationLink(
+                        destination: BigRobotView(),
+                        label: {
+                            Text("Big Robots")
+                        })
+                    NavigationLink(
                         destination: OneHundredInchMonitorView(),
                         label: {
                             Text("100-inch Monitor")
@@ -37,9 +42,9 @@ struct ContentView: View {
                             Text("Expressions And Speech")
                         })
                     NavigationLink(
-                        destination: KillMoveView(),
+                        destination: SpecialMoveView(),
                         label: {
-                            Text("Kill Move")
+                            Text("Special Move")
                         })
                     NavigationLink(
                         destination: ShootTheDeviceView(),

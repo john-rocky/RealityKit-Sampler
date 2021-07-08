@@ -44,6 +44,7 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
         self._expression = expression
         super.init(frame: frame)
         let config = ARFaceTrackingConfiguration()
+
         session.delegate = self
         session.run(config, options: [])
         

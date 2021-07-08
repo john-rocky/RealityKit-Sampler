@@ -9,6 +9,14 @@ import Foundation
 
 struct SpecialMove {
     
+    var specialMoveType:SpecialMoveType = .none
+    
+    enum SpecialMoveType {
+        case rightHand
+        case leftHand
+        case doubleHand
+        case none
+    }
 
     
 }
