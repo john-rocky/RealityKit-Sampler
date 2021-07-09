@@ -56,6 +56,11 @@ struct ContentView: View {
                         label: {
                             Text("Face Cropper")
                         })
+                    NavigationLink(
+                        destination: GrabARView(),
+                        label: {
+                            Text("Grab AR")
+                        })
                 }
             }.navigationBarTitle("")
             .navigationBarHidden(true)

@@ -8,6 +8,7 @@
 import Foundation
 
 struct GameState: Codable {
+    var boardAdded = false
     var isHost:Bool?
     var hostScore:Int = 0
     var guestScore:Int = 0

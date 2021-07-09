@@ -31,9 +31,7 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
         return session.connectedPeers
     }
     var browsingTime: Int?
-    var isHost: Bool?
     var gameState = GameState()
-    var boardAdded = false
     
     private var hapticsManager = HapticsManager()
     var audioPlaybackController:AudioPlaybackController!
@@ -61,12 +59,12 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
     var guestGoal: ModelEntity!
     
     lazy var goalText: ModelEntity = {
-        let text = ModelEntity(mesh: .generateText("Goal", extrusionDepth: 0.03, font: .systemFont(ofSize: 0.08, weight: .bold), containerFrame: CGRect(), alignment: .left, lineBreakMode: .byCharWrapping), materials: [hostMaterial])
+        let text = ModelEntity(mesh: .generateText("Goal", extrusionDepth: 0.03, font: .systemFont(ofSize: 0.04, weight: .bold), containerFrame: CGRect(), alignment: .left, lineBreakMode: .byCharWrapping), materials: [hostMaterial])
         return text
     }()
     
-    var hostMaterial: SimpleMaterial = SimpleMaterial(color: .black, isMetallic: true)
-    var guestMaterial: SimpleMaterial = SimpleMaterial(color: .white, isMetallic: true)
+    var hostMaterial: SimpleMaterial = SimpleMaterial(color: .white, isMetallic: true)
+    var guestMaterial: SimpleMaterial = SimpleMaterial(color: .black, isMetallic: true)
     
     var collisionSub:Cancellable?
     var animationSub:Cancellable!
@@ -77,6 +75,8 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
     var tableMaxZ:Float?
     
     var goalScaleCount = 0
+    
+    var nonPlayerCharacterTimer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -232,6 +232,7 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
                 }
             } else {
                 goalScaleCount = 0
+                goalText.isEnabled = false
             }
         })
         
@@ -269,7 +270,7 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             guestStriker.position = [0.0024,0.01,-0.1019]
             hostGoal.position = [0,0, -0.15]
             guestGoal.position = [0,0, 0.15]
-            goalText.position = [-0.1, 0.05, 0]
+            goalText.position = [0, 0.05, 0]
   
             anchor.addChild(table)
             anchor.addChild(wallFront1)
@@ -290,11 +291,25 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             arView.scene.addAnchor(anchor)
             arView.installGestures(.translation, for: hostStriker!)
 
-            boardAdded = true
+            gameState.boardAdded = true
+            setNonPlayerCharacter()
         }
     }
     
-    func goal(hostGoal: Bool) {
+    private func setNonPlayerCharacter() {
+        nonPlayerCharacterTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { [unowned self] timer in
+            
+            let positionDiff = puck.position - guestStriker.position
+            guestStriker.move(to: Transform(translation: positionDiff), relativeTo: guestStriker, duration: 1, timingFunction: .easeInOut)
+
+            Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _timer in
+                let backPositionDiff = [Float.random(in: -0.1...0.1),0.01,-0.1019] - guestStriker.position
+                guestStriker.move(to: Transform(translation:backPositionDiff), relativeTo: guestStriker, duration: 0.75, timingFunction: .easeOut)
+            }
+        })
+    }
+    
+    private func goal(hostGoal: Bool) {
         if hostGoal {
             gameState.guestScore += 1
             goalText.model?.materials = [guestMaterial]
@@ -306,6 +321,7 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             goalText.isEnabled = true
             goalText.move(to: Transform(scale: [2,2,2]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
         }
+        delegate?.gameStateChanged(state: gameState)
         print(gameState)
     }
     
@@ -358,8 +374,8 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
         guard let context = context else {return}
         guard let invitationTimeString = String(data:context,encoding: .ascii) else {return}
         guard let invitationTime = Int(invitationTimeString) else {return}
-        isHost = browsingTime < invitationTime
-        delegate?.connected(isHost: isHost!)
+        gameState.isHost = browsingTime < invitationTime
+        delegate?.connected(isHost: gameState.isHost!)
         invitationHandler(true, self.session)
     }
     
