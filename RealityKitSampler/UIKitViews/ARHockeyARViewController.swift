@@ -60,12 +60,23 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
     var hostGoal: ModelEntity!
     var guestGoal: ModelEntity!
     
+    lazy var goalText: ModelEntity = {
+        let text = ModelEntity(mesh: .generateText("Goal", extrusionDepth: 0.03, font: .systemFont(ofSize: 0.08, weight: .bold), containerFrame: CGRect(), alignment: .left, lineBreakMode: .byCharWrapping), materials: [hostMaterial])
+        return text
+    }()
+    
+    var hostMaterial: SimpleMaterial = SimpleMaterial(color: .black, isMetallic: true)
+    var guestMaterial: SimpleMaterial = SimpleMaterial(color: .white, isMetallic: true)
+    
     var collisionSub:Cancellable?
+    var animationSub:Cancellable!
     
     var tableMinX:Float?
     var tableMaxX:Float?
     var tableMinZ:Float?
     var tableMaxZ:Float?
+    
+    var goalScaleCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,14 +150,19 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
 
         wallLeft.physicsBody = PhysicsBodyComponent(massProperties: .default, material: .generate(friction: 0.9, restitution: 0.9), mode: .kinematic)
 
-        let goal = ModelEntity(mesh: .generateBox(size: <#T##SIMD3<Float>#>), materials: <#T##[Material]#>)
+        let goalModel = ModelEntity(mesh: .generateBox(size: [0.07,0.01,0.02]), materials: [SimpleMaterial(color: .black, isMetallic: true)])
         
-        hostGoal = sceneElement.hostGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
-        guestGoal = sceneElement.guestGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
+        
+        hostGoal = goalModel.clone(recursive: true)
+        guestGoal = goalModel.clone(recursive: true)
+        
+//        guestGoal = sceneElement.guestGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
         
         hostGoal.generateCollisionShapes(recursive: true)
         guestGoal.generateCollisionShapes(recursive: true)
         
+
+
         do {
             let audioResource = try AudioFileResource.load(named: "Collision.mp3",
                                                            in: nil,
@@ -172,54 +188,50 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             if event.entityA == wallLeft, event.entityB == puck {
                 puck.addForce([10,0,0], relativeTo: puck)
             }
-            if event.entityB == wallLeft, event.entityA == puck {
-                puck.addForce([10,0,0], relativeTo: puck)
-            }
+
             if event.entityA == wallRight, event.entityB == puck {
                 puck.addForce([-10,0,0], relativeTo: puck)
             }
-            if event.entityB == wallRight, event.entityA == puck {
-                puck.addForce([-10,0,0], relativeTo: puck)
-            }
+
             if event.entityA == wallFront1, event.entityB == puck {
                 puck.addForce([0,0,10], relativeTo: puck)
             }
-            if event.entityB == wallFront1, event.entityA == puck {
-                puck.addForce([0,0,10], relativeTo: puck)
-            }
+
             if event.entityA == wallFront2, event.entityB == puck {
                 puck.addForce([0,0,10], relativeTo: puck)
             }
-            if event.entityB == wallFront2, event.entityA == puck {
-                puck.addForce([0,0,10], relativeTo: puck)
-            }
+
             if event.entityA == wallBack1, event.entityB == puck {
                 puck.addForce([0,0,-10], relativeTo: puck)
             }
-            if event.entityB == wallBack1, event.entityA == puck {
-                puck.addForce([0,0,-10], relativeTo: puck)
-            }
+
             if event.entityA == wallBack2, event.entityB == puck {
                 puck.addForce([0,0,-10], relativeTo: puck)
             }
-            if event.entityB == wallBack2, event.entityA == puck {
-                puck.addForce([0,0,-10], relativeTo: puck)
-            }
+
             
             // Goal
             
             if event.entityA == hostGoal, event.entityB == puck {
                 goal(hostGoal: true)
             }
-            if event.entityB == hostGoal, event.entityA == puck {
-                goal(hostGoal: true)
-            }
-            
+
             if event.entityA == guestGoal, event.entityB == puck {
                 goal(hostGoal: false)
             }
-            if event.entityB == guestGoal, event.entityA == puck {
-                goal(hostGoal: false)
+            
+        })
+        
+        animationSub = arView.scene.subscribe(to: AnimationEvents.PlaybackCompleted.self, on: goalText, { [self] event in
+            goalScaleCount += 1
+            if goalScaleCount < 4 {
+                if goalScaleCount % 2 != 0 {
+                    goalText.move(to: Transform(scale: [0.5,0.5,0.5]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
+                } else {
+                    goalText.move(to: Transform(scale: [2,2,2]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
+                }
+            } else {
+                goalScaleCount = 0
             }
         })
         
@@ -229,7 +241,6 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
         tableMaxX = tableSize.x / 2
         tableMinZ = -tableSize.z / 2
         tableMaxZ = tableSize.z / 2
-        
     }
     
     var puckAnchor:AnchorEntity!
@@ -242,7 +253,6 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             arView.session.add(anchor: arAnchor)
             
             anchor = AnchorEntity(anchor: arAnchor)
-            let box = ModelEntity(mesh: .generateBox(size: 0.1), materials: [SimpleMaterial(color: .black, isMetallic: true)])
             
             wallFront1.position = [-0.0666,0.01,-0.151]
             wallFront2.position = [0.0686,0.01,-0.151]
@@ -250,16 +260,17 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             wallBack2.position = [0.067,0.01,0.151]
             wallLeft.position = [-0.099,0.01,0]
             wallRight.position = [0.101,0.01,0]
-            hostGoal.position = [0,-0.0072,0.1653]
-            guestGoal.position = [0,-000.72,-0.1653]
-            hostGoal.scale = [0.02,0.02,0.02]
-            guestGoal.scale = [0.02,0.02,0.02]
+
             wallFront1.scale = [0.94,0.94,0.94]
             wallFront2.scale = [0.94,0.94,0.94]
             wallBack1.scale = [0.94,0.94,0.94]
             wallBack2.scale = [0.94,0.94,0.94]
             hostStriker.position = [0.0072,0.01,0.1084]
             guestStriker.position = [0.0024,0.01,-0.1019]
+            hostGoal.position = [0,0, -0.15]
+            guestGoal.position = [0,0, 0.15]
+            goalText.position = [-0.1, 0.05, 0]
+  
             anchor.addChild(table)
             anchor.addChild(wallFront1)
             anchor.addChild(wallFront2)
@@ -270,7 +281,12 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             anchor.addChild(hostStriker)
             anchor.addChild(guestStriker)
             anchor.addChild(puck)
+            anchor.addChild(hostGoal)
+            anchor.addChild(guestGoal)
+            anchor.addChild(goalText)
 
+            goalText.isEnabled = false
+            
             arView.scene.addAnchor(anchor)
             arView.installGestures(.translation, for: hostStriker!)
 
@@ -281,8 +297,14 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
     func goal(hostGoal: Bool) {
         if hostGoal {
             gameState.guestScore += 1
+            goalText.model?.materials = [guestMaterial]
+            goalText.isEnabled = true
+            goalText.move(to: Transform(scale: [2,2,2]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
         } else {
             gameState.hostScore += 1
+            goalText.model?.materials = [hostMaterial]
+            goalText.isEnabled = true
+            goalText.move(to: Transform(scale: [2,2,2]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
         }
         print(gameState)
     }
