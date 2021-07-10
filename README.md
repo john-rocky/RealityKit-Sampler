@@ -7,7 +7,7 @@ RealityKitSampler is the sample　collection of the basic functions of RealityKi
 
 2, Please change the "Team" field of xcode Signing and Capabilities to your account.
 
-3, Build in your actual device. This project can not be used in Simulators.
+3, Build on your actual device. This project can not be used in Simulators.
 
 ## Contents
 
@@ -58,6 +58,10 @@ Detect a face then crop.
 
 Multi Device AR Game.
 
+### Hand Interaction
+
+AR with Vision Framework.
+
 
 ## What you can learn
 
@@ -70,7 +74,9 @@ Multi Device AR Game.
 | Speech Balloon | Face Anchor, ARSessionDelegate, Deal with RealityComposer |
 | Special Move | Body Anchor |
 | Face Cropper | Image Anchor |
-| AR Hockey | Collaborate Session |
+| AR Hockey | Collaborative Session |
+| Hand Interaction | addForce, use with Vision |
+
 
 ## Author
 
