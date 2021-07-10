@@ -41,6 +41,9 @@ How to place objects of different shapes and colors.
 
 ### Speech Balloon
 
+![Jul-10-2021 15-15-29](https://user-images.githubusercontent.com/23278992/125153880-bfd75580-e191-11eb-8b75-35b19f4da4fa.gif)
+
+
 Visualize facial expressions and what you say.
 
 ### Special Move
