@@ -51,7 +51,7 @@ Visualize facial expressions and what you say.
 ![Jul-10-2021 15-29-53](https://user-images.githubusercontent.com/23278992/125154167-b7801a00-e193-11eb-93c6-631e827a96ed.gif)
 
 
-Interact body and AR object. With CoreML.
+Interact body and AR object.
 
 ### Face Cropper
 
