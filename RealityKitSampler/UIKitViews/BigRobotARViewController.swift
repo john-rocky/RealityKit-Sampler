@@ -10,9 +10,10 @@ import RealityKit
 import ARKit
 import Combine
 
-class BigRobotARViewController: UIViewController {
+class BigRobotARViewController: UIViewController, ARCoachingOverlayViewDelegate {
 
     private var arView: ARView!
+    private let coachingOverlay = ARCoachingOverlayView()
     private var animationEnd: Cancellable!
     private var go = true
     private var robot:Entity!
@@ -28,6 +29,12 @@ class BigRobotARViewController: UIViewController {
         config.environmentTexturing = .automatic
         arView.environment.sceneUnderstanding.options = [.occlusion]
         arView.session.run(config, options: [])
+        coachingOverlay.goal = .horizontalPlane
+        coachingOverlay.activatesAutomatically = false
+        coachingOverlay.session = arView.session
+        coachingOverlay.delegate = self
+        coachingOverlay.frame = arView.bounds
+        arView.addSubview(coachingOverlay)
         placeRobots()
     }
     

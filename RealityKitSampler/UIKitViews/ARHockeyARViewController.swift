@@ -16,12 +16,13 @@ protocol ARHockeyARViewControllerDelegate:NSObjectProtocol {
     func gameStateChanged(state:GameState)
 }
 
-class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate {
+class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, ARCoachingOverlayViewDelegate {
     
     weak var delegate: ARHockeyARViewControllerDelegate?
     
     var arView:ARView!
-    
+    let coachingOverlay = ARCoachingOverlayView()
+
     private static let serviceType = "shoot-device"
     private var session: MCSession!
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
@@ -34,14 +35,14 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
     var gameState = GameState()
     
     private var hapticsManager = HapticsManager()
-    var audioPlaybackController:AudioPlaybackController!
-    
+    var audioPlaybackController:AudioPlaybackController?
+    var goalPlayBackController:AudioPlaybackController?
     lazy var sceneElement: Tools._Tools = {
         let scene = try! Tools.load_Tools()
         return scene
     }()
     
-    var anchor:AnchorEntity!
+    var anchor:AnchorEntity?
     
     var puck: ModelEntity!
     var hostStriker: ModelEntity!
@@ -110,11 +111,19 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
         setupTable()
         
         hapticsManager.createEngine()
-
+        coachingOverlay.goal = .horizontalPlane
+        coachingOverlay.activatesAutomatically = true
+        coachingOverlay.session = arView.session
+        coachingOverlay.delegate = self
+        coachingOverlay.frame = arView.bounds
+        arView.addSubview(coachingOverlay)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        nonPlayerCharacterTimer?.invalidate()
+        arView.session.pause()
+        
     }
     
     func setupTable() {
@@ -155,9 +164,6 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
         
         hostGoal = goalModel.clone(recursive: true)
         guestGoal = goalModel.clone(recursive: true)
-        
-//        guestGoal = sceneElement.guestGoal?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first?.children.first as! ModelEntity
-        
         hostGoal.generateCollisionShapes(recursive: true)
         guestGoal.generateCollisionShapes(recursive: true)
         
@@ -176,13 +182,26 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             print("Error loading audio file")
         }
         
+        
+        do {
+            let audioResource = try AudioFileResource.load(named: "goal.mp3",
+                                                           in: nil,
+                                                           inputMode: .spatial,
+                                                           loadingStrategy: .preload,
+                                                           shouldLoop: false)
+            
+            goalPlayBackController = table.prepareAudio(audioResource)
+        } catch {
+            print("Error loading audio file")
+        }
+        
         // Sorry about this simple imitation of table force.
         
         collisionSub = arView.scene.subscribe(to: CollisionEvents.Began.self, { [self] event in
             hapticsManager.playHapticTransient()
-            audioPlaybackController.stop()
+            audioPlaybackController?.stop()
             
-            audioPlaybackController.play()
+            audioPlaybackController?.play()
             // wall
             
             if event.entityA == wallLeft, event.entityB == puck {
@@ -219,16 +238,16 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             if event.entityA == guestGoal, event.entityB == puck {
                 goal(hostGoal: false)
             }
-            
         })
         
         animationSub = arView.scene.subscribe(to: AnimationEvents.PlaybackCompleted.self, on: goalText, { [self] event in
             goalScaleCount += 1
             if goalScaleCount < 4 {
+
                 if goalScaleCount % 2 != 0 {
-                    goalText.move(to: Transform(scale: [0.5,0.5,0.5]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
+                    goalText.move(to: Transform(translation:[-0.2,0,0]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
                 } else {
-                    goalText.move(to: Transform(scale: [2,2,2]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
+                    goalText.move(to: Transform(translation:[0.1,0,0]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
                 }
             } else {
                 goalScaleCount = 0
@@ -242,11 +261,14 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
         tableMaxX = tableSize.x / 2
         tableMinZ = -tableSize.z / 2
         tableMaxZ = tableSize.z / 2
+        
+        guestStriker.synchronization?.ownershipTransferMode = .autoAccept
     }
-    
-    var puckAnchor:AnchorEntity!
-    
+        
     @objc func tapped(sender: UITapGestureRecognizer) {
+        guard !gameState.boardAdded else {
+            return
+        }
         let location = sender.location(in: arView)
         let results = arView.raycast(from: location, allowing: .estimatedPlane, alignment: .any)
         if results.first != nil {
@@ -272,26 +294,27 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
             guestGoal.position = [0,0, 0.15]
             goalText.position = [0, 0.05, 0]
   
-            anchor.addChild(table)
-            anchor.addChild(wallFront1)
-            anchor.addChild(wallFront2)
-            anchor.addChild(wallBack1)
-            anchor.addChild(wallBack2)
-            anchor.addChild(wallLeft)
-            anchor.addChild(wallRight)
-            anchor.addChild(hostStriker)
-            anchor.addChild(guestStriker)
-            anchor.addChild(puck)
-            anchor.addChild(hostGoal)
-            anchor.addChild(guestGoal)
-            anchor.addChild(goalText)
+            anchor!.addChild(table)
+            anchor!.addChild(wallFront1)
+            anchor!.addChild(wallFront2)
+            anchor!.addChild(wallBack1)
+            anchor!.addChild(wallBack2)
+            anchor!.addChild(wallLeft)
+            anchor!.addChild(wallRight)
+            anchor!.addChild(hostStriker)
+            anchor!.addChild(guestStriker)
+            anchor!.addChild(puck)
+            anchor!.addChild(hostGoal)
+            anchor!.addChild(guestGoal)
+            anchor!.addChild(goalText)
 
             goalText.isEnabled = false
             
-            arView.scene.addAnchor(anchor)
+            arView.scene.addAnchor(anchor!)
             arView.installGestures(.translation, for: hostStriker!)
 
             gameState.boardAdded = true
+            gameStateChanged()
             setNonPlayerCharacter()
         }
     }
@@ -313,16 +336,73 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
         if hostGoal {
             gameState.guestScore += 1
             goalText.model?.materials = [guestMaterial]
-            goalText.isEnabled = true
-            goalText.move(to: Transform(scale: [2,2,2]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
+            
         } else {
             gameState.hostScore += 1
             goalText.model?.materials = [hostMaterial]
-            goalText.isEnabled = true
-            goalText.move(to: Transform(scale: [2,2,2]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
         }
+        goalText.isEnabled = true
+        goalText.move(to: Transform(translation:[-0.1,0,0]), relativeTo: goalText, duration: 0.5, timingFunction: .easeInOut)
+        gameStateChanged()
+        goalPlayBackController?.play()
+    }
+    
+    
+    private func gameStateChanged(){
         delegate?.gameStateChanged(state: gameState)
-        print(gameState)
+        
+        guard gameState.isHost ?? true else {
+            return
+        }
+        let encoder = JSONEncoder()
+        do {
+            let stateData = try encoder.encode(gameState)
+            sendToAllPeers(stateData)
+        } catch let err {
+            print(err)
+        }
+    }
+    
+    private func sendToAllPeers(_ data: Data) {
+        do {
+            try session.send(data, toPeers: session.connectedPeers, with: .reliable)
+        } catch {
+            print("error sending data to peers: \(error.localizedDescription)")
+        }
+    }
+    
+    private func didReceiveState(state:GameState){
+        if let isHost = gameState.isHost {
+            if !isHost {
+                gameState = state
+                delegate?.gameStateChanged(state: gameState)
+                if let anchor = self.anchor,anchor.isActive {
+                    anchor.removeFromParent()
+                }
+                arView.scene.anchors.first?.children.first(where: {$0.name == "guestStriker"})?.requestOwnership { [self] result in
+                    if result == .granted {
+                        arView.installGestures(for: arView.scene.anchors.first?.children.first(where: {$0.name == "guestStriker"})! as! HasCollision)
+                        nonPlayerCharacterTimer?.invalidate()
+                    } else {
+                        
+                    }
+                }
+            }
+        } else {
+            gameState = state
+            delegate?.gameStateChanged(state: gameState)
+            if !(state.isHost ?? false) {
+                anchor?.removeFromParent()
+                arView.scene.anchors.first?.children.first(where: {$0.name == "guestStriker"})?.requestOwnership { [self] result in
+                    if result == .granted {
+                        arView.installGestures(for: arView.scene.anchors.first?.children.first(where: {$0.name == "guestStriker"})! as! HasCollision)
+                        nonPlayerCharacterTimer?.invalidate()
+                    } else {
+                        
+                    }
+                }
+            }
+        }
     }
     
     // MARK: - ARSessionDelegate
@@ -334,7 +414,7 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
                 puck.removeFromParent()
                 puck.position = [0,0.05,0]
                 puck.orientation = simd_quatf(angle: 0, axis: [1,1,1])
-                anchor.addChild(puck)
+                anchor?.addChild(puck)
             }
         }
     }
@@ -354,7 +434,10 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        
+        let decoder = JSONDecoder()
+            if let receivedState = try?  decoder.decode(GameState.self, from: data) {
+                didReceiveState(state: receivedState)
+            }
     }
     
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -375,7 +458,7 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
         guard let invitationTimeString = String(data:context,encoding: .ascii) else {return}
         guard let invitationTime = Int(invitationTimeString) else {return}
         gameState.isHost = browsingTime < invitationTime
-        delegate?.connected(isHost: gameState.isHost!)
+        gameStateChanged()
         invitationHandler(true, self.session)
     }
     

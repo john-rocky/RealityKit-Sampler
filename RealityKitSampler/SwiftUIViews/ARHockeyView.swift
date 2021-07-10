@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ARHockeyView: View {
+    @State var gameState: GameState?
     @State var isHost:Bool?
     @State var hostScore:Int = 0
     @State var guestScore:Int = 0
@@ -15,39 +16,37 @@ struct ARHockeyView: View {
     
     var body: some View {
         ZStack {
-            ShootTheDeviceARViewContainer(isHost: $isHost, hostScore: $hostScore, guestScore: $guestScore)
+            ShootTheDeviceARViewContainer(gameState: $gameState, isHost: $isHost, hostScore: $hostScore, guestScore: $guestScore)
                 .edgesIgnoringSafeArea(.all)
             VStack {
-                switch isHost {
-                case true: Text("(You) black \(hostScore) : \(guestScore) white" )
+                switch gameState?.isHost {
+                case true: Text("(You) black \(gameState?.hostScore ?? 0) : \(gameState?.guestScore ?? 0) white" )
                     .font(.system(size: 24, weight:.bold))
                     .foregroundColor(.black)
-                case false: Text("black \(hostScore) : \(guestScore) white (You)" )
+                case false: Text("black \(gameState?.hostScore ?? 0) : \(gameState?.guestScore ?? 0) white (You)" )
                     .font(.system(size: 24, weight:.bold))
                     .foregroundColor(.white)
                 default:
-                    Text("(You) black \(hostScore) : \(guestScore) white" )
+                    Text("(You) black \(gameState?.hostScore ?? 0) : \(gameState?.guestScore ?? 0) white (NPC)")
                         .font(.system(size: 24, weight:.bold))
                         .foregroundColor(.white)
                 }
+                switch gameState?.boardAdded {
+                case true: Text("")
+                default: Text("Place board by tapping plane.")
+                }
                 Spacer()
+                if gameState?.isHost == nil {
+                    Text("If an another device lauch this game, you automatically connect")
+                }
             }
         }
-    }
-    
-    func updateGameStateText(){
-        var text:String
-        if let isHost = isHost {
-            text = "\(isHost)"
-        } else {
-            text = ""
-        }
-        gameStateText = text
     }
 }
 
 struct ShootTheDeviceARViewContainer: UIViewControllerRepresentable {
-
+    
+    @Binding var gameState: GameState?
     @Binding var isHost:Bool?
     @Binding var hostScore:Int
     @Binding var guestScore:Int
@@ -63,16 +62,18 @@ struct ShootTheDeviceARViewContainer: UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> ShootTheDeviceARViewContainer.Coordinator {
-        return Coordinator(isHost: $isHost, hostScore: $hostScore, guestScore:  $guestScore)
+        return Coordinator(gameState: $gameState, isHost: $isHost, hostScore: $hostScore, guestScore:  $guestScore)
     }
     
     class Coordinator: NSObject, ARHockeyARViewControllerDelegate {
         
+        @Binding var gameState: GameState!
         @Binding var isHost:Bool?
         @Binding var hostScore:Int
         @Binding var guestScore:Int
         
-        init(isHost: Binding<Bool?>, hostScore: Binding<Int>, guestScore: Binding<Int>) {
+        init(gameState:Binding<GameState?>, isHost: Binding<Bool?>, hostScore: Binding<Int>, guestScore: Binding<Int>) {
+            _gameState = gameState
             _isHost = isHost
             _hostScore = hostScore
             _guestScore = guestScore
@@ -83,8 +84,7 @@ struct ShootTheDeviceARViewContainer: UIViewControllerRepresentable {
         }
         
         func gameStateChanged(state: GameState) {
-            self.hostScore = state.hostScore
-            self.guestScore = state.guestScore
+            self.gameState = state
         }
         
         

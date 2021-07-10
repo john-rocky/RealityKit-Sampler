@@ -132,8 +132,8 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
             }
         case .changed:
             let newTranslation = sender.translation(in: self)
-            materialXPan = (Float(newTranslation.x) - Float(lastPan.x)) * -0.0025
-            materialYPan = (Float(newTranslation.y) - Float(lastPan.y)) * -0.0025
+            materialXPan = (Float(newTranslation.x) - Float(lastPan.x)) * -0.001
+            materialYPan = (Float(newTranslation.y) - Float(lastPan.y)) * -0.001
             guard let position = pannedEntity?.position else { return }
             pannedEntity?.position = [position.x - materialXPan,position.y + materialYPan, position.z]
             lastPan = newTranslation

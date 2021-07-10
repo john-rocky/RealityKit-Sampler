@@ -10,8 +10,9 @@ import SwiftUI
 import RealityKit
 import AVFoundation
 import Combine
+import ARKit
 
-class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ARCoachingOverlayViewDelegate {
     
     private var videoLooper: AVPlayerLooper!
     private var arView: ARView!
@@ -19,7 +20,8 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
     private var displayEntity: ModelEntity!
     private var anchorEntity: AnchorEntity!
     private var isActiveSub:Cancellable!
-    
+    let coachingOverlay = ARCoachingOverlayView()
+
     @Binding var didTap:Bool
     
     init(didTap:Binding<Bool>) {
@@ -36,6 +38,12 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
         arView = ARView(frame: view.bounds)
         view.addSubview(arView)
         addMonitorEntity()
+        coachingOverlay.goal = .verticalPlane
+        coachingOverlay.activatesAutomatically = true
+        coachingOverlay.session = arView.session
+        coachingOverlay.delegate = self
+        coachingOverlay.frame = arView.bounds
+        arView.addSubview(coachingOverlay)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
