@@ -69,15 +69,15 @@ AR with Vision Framework.
 
 | Content | Technical Elements |
 | ------------- | ------------- |
-| Put the box  | ARView in SwiftUI, Scene, Entity, Anchor, MeshResource, Material.  |
-| Big Robots  | USDZ, Animation  |
-| Big Monitor  | VideoMaterial, SceneEvent  |
-| Building Block | Ray Cast, Hit Test, Handle Gestures, Physics, Collision, TextureResource |
-| Speech Balloon | Face Anchor, ARSessionDelegate, Deal with RealityComposer |
-| Special Move | Body Anchor |
-| Face Cropper | Image Anchor |
-| AR Hockey | Collaborative Session |
-| Hand Interaction | addForce, use with Vision |
+| **Put the box**  | ARView in SwiftUI, Scene, Entity, Anchor, MeshResource, Material.  |
+| **Big Robots**  | USDZ, Animation  |
+| **Big Monitor**  | VideoMaterial, SceneEvent  |
+| **Building Block** | Ray Cast, Hit Test, Handle Gestures, Physics, Collision, TextureResource |
+| **Speech Balloon** | Face Anchor, ARSessionDelegate, Deal with RealityComposer |
+| **Special Move** | Body Anchor |
+| **Face Cropper** | Image Anchor |
+| **AR Hockey** | Collaborative Session |
+| **Hand Interaction** | addForce, use with Vision |
 
 
 ## Author
