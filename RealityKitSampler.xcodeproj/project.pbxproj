@@ -29,8 +29,8 @@
 		734E22DA26950F4200509F8C /* drummer.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 734E22D926950F4200509F8C /* drummer.usdz */; };
 		734E22E126974F8300509F8C /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734E22E026974F8300509F8C /* HapticsManager.swift */; };
 		734E22E62697623900509F8C /* Collision.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 734E22E52697623900509F8C /* Collision.mp3 */; };
-		734E22EC26988BDB00509F8C /* GrabARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734E22EB26988BDB00509F8C /* GrabARView.swift */; };
-		734E22EE26988C3E00509F8C /* GrabARARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734E22ED26988C3E00509F8C /* GrabARARViewController.swift */; };
+		734E22EC26988BDB00509F8C /* HandInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734E22EB26988BDB00509F8C /* HandInteractionView.swift */; };
+		734E22EE26988C3E00509F8C /* HandInteractionARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734E22ED26988C3E00509F8C /* HandInteractionARViewController.swift */; };
 		734E22F02698A32600509F8C /* goal.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 734E22EF2698A32600509F8C /* goal.mp3 */; };
 		73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */; };
 		73F0ACD426803FE900199348 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD326803FE900199348 /* ContentView.swift */; };
@@ -87,8 +87,8 @@
 		734E22D926950F4200509F8C /* drummer.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = drummer.usdz; sourceTree = "<group>"; };
 		734E22E026974F8300509F8C /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
 		734E22E52697623900509F8C /* Collision.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Collision.mp3; sourceTree = "<group>"; };
-		734E22EB26988BDB00509F8C /* GrabARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrabARView.swift; sourceTree = "<group>"; };
-		734E22ED26988C3E00509F8C /* GrabARARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrabARARViewController.swift; sourceTree = "<group>"; };
+		734E22EB26988BDB00509F8C /* HandInteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandInteractionView.swift; sourceTree = "<group>"; };
+		734E22ED26988C3E00509F8C /* HandInteractionARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandInteractionARViewController.swift; sourceTree = "<group>"; };
 		734E22EF2698A32600509F8C /* goal.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = goal.mp3; sourceTree = "<group>"; };
 		73F0ACCE26803FE900199348 /* RealityKitSampler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealityKitSampler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealityKitSamplerApp.swift; sourceTree = "<group>"; };
@@ -246,7 +246,7 @@
 				73142191268819C100EBB446 /* SpecialMoveView.swift */,
 				731421A3268BC2D300EBB446 /* ARHockeyView.swift */,
 				731421AB268E11EA00EBB446 /* FaceCropperView.swift */,
-				734E22EB26988BDB00509F8C /* GrabARView.swift */,
+				734E22EB26988BDB00509F8C /* HandInteractionView.swift */,
 			);
 			path = SwiftUIViews;
 			sourceTree = "<group>";
@@ -261,7 +261,7 @@
 				7314219926881F3400EBB446 /* SpecialMoveARViewController.swift */,
 				731421A1268BC2B000EBB446 /* ARHockeyARViewController.swift */,
 				731421AD268E12BA00EBB446 /* FaceCropperARViewController.swift */,
-				734E22ED26988C3E00509F8C /* GrabARARViewController.swift */,
+				734E22ED26988C3E00509F8C /* HandInteractionARViewController.swift */,
 			);
 			path = UIKitViews;
 			sourceTree = "<group>";
@@ -409,7 +409,7 @@
 				7314211226868D5100EBB446 /* ExpressionsAndSpeechView.swift in Sources */,
 				7314219A26881F3400EBB446 /* SpecialMoveARViewController.swift in Sources */,
 				734E22D626950E0E00509F8C /* BigRobotARViewController.swift in Sources */,
-				734E22EE26988C3E00509F8C /* GrabARARViewController.swift in Sources */,
+				734E22EE26988C3E00509F8C /* HandInteractionARViewController.swift in Sources */,
 				731421A6268CA5FA00EBB446 /* GameState.swift in Sources */,
 				7314210E268457E700EBB446 /* ImagePickerView.swift in Sources */,
 				73F0ACFD2680408400199348 /* PlacingObjectARView.swift in Sources */,
@@ -426,7 +426,7 @@
 				731421AA268D0E9600EBB446 /* Tools.rcproject in Sources */,
 				734E22E126974F8300509F8C /* HapticsManager.swift in Sources */,
 				731421B42691642900EBB446 /* SpecialMove.swift in Sources */,
-				734E22EC26988BDB00509F8C /* GrabARView.swift in Sources */,
+				734E22EC26988BDB00509F8C /* HandInteractionView.swift in Sources */,
 				734E22D426950CB200509F8C /* BigRobotView.swift in Sources */,
 				7314211426868D7000EBB446 /* ExpressionsAndSpeechARView.swift in Sources */,
 			);

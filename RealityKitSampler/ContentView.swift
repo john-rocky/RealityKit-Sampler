@@ -57,9 +57,9 @@ struct ContentView: View {
                             Text("Face Cropper")
                         })
                     NavigationLink(
-                        destination: GrabARView(),
+                        destination: HandInteractionView(),
                         label: {
-                            Text("Grab AR")
+                            Text("Hand Interaction")
                         })
                 }
             }.navigationBarTitle("")

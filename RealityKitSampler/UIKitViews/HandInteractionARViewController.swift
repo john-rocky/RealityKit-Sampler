@@ -10,7 +10,7 @@ import Vision
 import RealityKit
 import ARKit
 
-class GrabARARViewController: UIViewController, ARSessionDelegate {
+class HandInteractionARViewController: UIViewController, ARSessionDelegate {
 
     private var arView:ARView!
     lazy var request:VNRequest = {
