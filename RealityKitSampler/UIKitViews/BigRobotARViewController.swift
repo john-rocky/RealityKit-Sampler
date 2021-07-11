@@ -11,7 +11,7 @@ import ARKit
 import Combine
 
 class BigRobotARViewController: UIViewController, ARCoachingOverlayViewDelegate {
-
+    
     private var arView: ARView!
     private let coachingOverlay = ARCoachingOverlayView()
     private var animationEnd: Cancellable!
@@ -19,7 +19,7 @@ class BigRobotARViewController: UIViewController, ARCoachingOverlayViewDelegate 
     private var robot:Entity!
     private var drummer:Entity!
     private var moveFoward = false
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         arView = ARView(frame: view.bounds)
@@ -46,10 +46,10 @@ class BigRobotARViewController: UIViewController, ARCoachingOverlayViewDelegate 
         let anchor = AnchorEntity(plane: .horizontal)
         anchor.addChild(robot)
         anchor.addChild(drummer)
-
-
+        
+        
         robot.orientation = simd_quatf(angle:.pi , axis: [0,1,0])
-
+        
         arView.scene.addAnchor(anchor)
         
         robot.position = [-10,0,-30]
@@ -57,7 +57,7 @@ class BigRobotARViewController: UIViewController, ARCoachingOverlayViewDelegate 
         drummer.position = [0,0,-60]
         robot.setScale([100,100,100], relativeTo: robot)
         drummer.setScale([100,100,100], relativeTo: drummer)
-
+        
         for animation in robot.availableAnimations {
             robot.playAnimation(animation.repeat())
         }
@@ -80,15 +80,15 @@ class BigRobotARViewController: UIViewController, ARCoachingOverlayViewDelegate 
             }
         })
     }
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

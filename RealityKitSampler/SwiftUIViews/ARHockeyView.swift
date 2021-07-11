@@ -10,16 +10,14 @@ import SwiftUI
 struct ARHockeyView: View {
     @State var gameState: GameState?
     @State var isHost:Bool?
-    @State var hostScore:Int = 0
-    @State var guestScore:Int = 0
     @State var gameStateText:String = ""
     
     var body: some View {
         ZStack {
-            ShootTheDeviceARViewContainer(gameState: $gameState, isHost: $isHost, hostScore: $hostScore, guestScore: $guestScore)
+            ShootTheDeviceARViewContainer(gameState: $gameState, isHost: $isHost)
                 .edgesIgnoringSafeArea(.all)
             VStack {
-                switch gameState?.isHost {
+                switch isHost {
                 case true: Text("(You) black \(gameState?.hostScore ?? 0) : \(gameState?.guestScore ?? 0) white" )
                     .font(.system(size: 24, weight:.bold))
                     .foregroundColor(.black)
@@ -36,7 +34,7 @@ struct ARHockeyView: View {
                 default: Text("Place board by tapping plane.")
                 }
                 Spacer()
-                if gameState?.isHost == nil {
+                if isHost == nil {
                     Text("If an another device lauch this game, you automatically connect")
                 }
             }
@@ -48,8 +46,6 @@ struct ShootTheDeviceARViewContainer: UIViewControllerRepresentable {
     
     @Binding var gameState: GameState?
     @Binding var isHost:Bool?
-    @Binding var hostScore:Int
-    @Binding var guestScore:Int
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<ShootTheDeviceARViewContainer>) -> ARHockeyARViewController {
         let viewController = ARHockeyARViewController()
@@ -62,21 +58,17 @@ struct ShootTheDeviceARViewContainer: UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> ShootTheDeviceARViewContainer.Coordinator {
-        return Coordinator(gameState: $gameState, isHost: $isHost, hostScore: $hostScore, guestScore:  $guestScore)
+        return Coordinator(gameState: $gameState, isHost: $isHost)
     }
     
     class Coordinator: NSObject, ARHockeyARViewControllerDelegate {
         
         @Binding var gameState: GameState!
         @Binding var isHost:Bool?
-        @Binding var hostScore:Int
-        @Binding var guestScore:Int
         
-        init(gameState:Binding<GameState?>, isHost: Binding<Bool?>, hostScore: Binding<Int>, guestScore: Binding<Int>) {
+        init(gameState:Binding<GameState?>, isHost: Binding<Bool?>) {
             _gameState = gameState
             _isHost = isHost
-            _hostScore = hostScore
-            _guestScore = guestScore
         }
         
         func connected(isHost: Bool) {

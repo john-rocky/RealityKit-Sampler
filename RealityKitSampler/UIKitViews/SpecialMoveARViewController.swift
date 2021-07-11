@@ -73,7 +73,7 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
         
         switch specialMove {
         case .doubleHand:
-            color = .yellow
+            color = .purple
             originSphere.scale = [1.2,1,1]
             destinationSphere.scale = [1.2,1,1]
             handAnchor.addChild(originSphere)

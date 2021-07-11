@@ -20,46 +20,55 @@ struct ContentView: View {
                         destination: JustPlaceBoxView(),
                         label: {
                             Text("Just Place A Box")
+                                .font(.headline)
                         })
                     NavigationLink(
                         destination: BigRobotView(),
                         label: {
                             Text("Big Robots")
+                                .font(.headline)
                         })
                     NavigationLink(
                         destination: OneHundredInchMonitorView(),
                         label: {
                             Text("100-inch Monitor")
+                                .font(.headline)
                         })
                     NavigationLink(
                         destination: PlaceObjectView(),
                         label: {
                             Text("Place Objects")
+                                .font(.headline)
                         })
                     NavigationLink(
                         destination: ExpressionsAndSpeechView(),
                         label: {
                             Text("Expressions And Speech")
+                                .font(.headline)
                         })
                     NavigationLink(
                         destination: SpecialMoveView(),
                         label: {
                             Text("Special Move")
+                                .font(.headline)
                         })
                     NavigationLink(
                         destination: ARHockeyView(),
                         label: {
                             Text("AR Hockey")
+                                .font(.headline)
                         })
                     NavigationLink(
                         destination: FaceCropperView(),
                         label: {
                             Text("Face Cropper")
+                                .font(.headline)
                         })
                     NavigationLink(
                         destination: HandInteractionView(),
                         label: {
                             Text("Hand Interaction")
+                                .font(.headline)
                         })
                 }
             }.navigationBarTitle("")
