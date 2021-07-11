@@ -11,7 +11,7 @@ import RealityKit
 import ARKit
 
 class HandInteractionARViewController: UIViewController, ARSessionDelegate {
-
+    
     private var arView:ARView!
     lazy var request:VNRequest = {
         var handPoseRequest = VNDetectHumanHandPoseRequest(completionHandler: handDetectionCompletionHandler)
@@ -37,7 +37,7 @@ class HandInteractionARViewController: UIViewController, ARSessionDelegate {
         setupObject()
     }
     
-
+    
     private func setupObject(){
         let anchor = AnchorEntity(plane: .horizontal)
         
@@ -59,7 +59,7 @@ class HandInteractionARViewController: UIViewController, ARSessionDelegate {
     func handDetectionCompletionHandler(request: VNRequest?, error: Error?) {
         guard let observation = request?.results?.first as? VNHumanHandPoseObservation else { return }
         guard let indexFingerTip = try? observation.recognizedPoints(.all)[.indexTip],
-            indexFingerTip.confidence > 0.3 else {return}
+              indexFingerTip.confidence > 0.3 else {return}
         let normalizedIndexPoint = VNImagePointForNormalizedPoint(CGPoint(x: indexFingerTip.location.y, y: indexFingerTip.location.x), viewWidth,  viewHeight)
         if let entity = arView.entity(at: normalizedIndexPoint) as? ModelEntity, entity == box {
             entity.addForce([0,40,0], relativeTo: nil)
@@ -73,7 +73,7 @@ class HandInteractionARViewController: UIViewController, ARSessionDelegate {
             let handler = VNImageRequestHandler(cvPixelBuffer:pixelBuffer, orientation: .up, options: [:])
             do {
                 try handler.perform([(self?.request)!])
-
+                
             } catch let error {
                 print(error)
             }

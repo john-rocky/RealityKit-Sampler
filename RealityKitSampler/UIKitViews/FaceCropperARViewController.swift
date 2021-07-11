@@ -11,11 +11,11 @@ import Vision
 import ARKit
 
 class FaceCropperARViewController: UIViewController, ARSessionDelegate {
-
+    
     var arView: ARView!
     
     lazy var request:VNRequest = {
-       let request = VNDetectFaceRectanglesRequest(completionHandler: completionHandler)
+        let request = VNDetectFaceRectanglesRequest(completionHandler: completionHandler)
         return request
     }()
     
@@ -33,7 +33,7 @@ class FaceCropperARViewController: UIViewController, ARSessionDelegate {
         arView = ARView(frame: view.bounds)
         view.addSubview(arView)
         arView.session.delegate = self
-
+        
     }
     
     func completionHandler(request: VNRequest?, error: Error?) {
@@ -102,18 +102,7 @@ class FaceCropperARViewController: UIViewController, ARSessionDelegate {
                 self.arView.scene.addAnchor(anchorEntity)
                 faceBox.move(to: Transform(translation:[0,0,0.3]), relativeTo: faceBox, duration: 3, timingFunction: .easeInOut)
             }
-
+            
         }
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

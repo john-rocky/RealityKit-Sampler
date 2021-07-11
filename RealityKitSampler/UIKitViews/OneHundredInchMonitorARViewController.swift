@@ -21,7 +21,7 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
     private var anchorEntity: AnchorEntity!
     private var isActiveSub:Cancellable!
     let coachingOverlay = ARCoachingOverlayView()
-
+    
     @Binding var didTap:Bool
     
     init(didTap:Binding<Bool>) {
@@ -50,12 +50,12 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
         super.viewDidDisappear(animated)
         player.pause()
     }
-
+    
     func addMonitorEntity() {
         anchorEntity = AnchorEntity(plane: .vertical)
         displayEntity = ModelEntity(mesh: .generateBox(size: [2.21,0.2,1.24],cornerRadius: 0.02))
         displayEntity.position = [0,0,0.03]
-
+        
         if let videoURL = Bundle.main.url(forResource: "windChimes", withExtension: "mp4") {
             let asset = AVURLAsset(url: videoURL)
             let playerItem = AVPlayerItem(asset: asset)

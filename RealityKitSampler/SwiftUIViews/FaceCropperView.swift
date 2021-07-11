@@ -15,14 +15,14 @@ struct FaceCropperView: View {
 }
 
 struct FaceCropperARViewContainer: UIViewControllerRepresentable {
-
+    
     func makeUIViewController(context: UIViewControllerRepresentableContext<FaceCropperARViewContainer>) -> FaceCropperARViewController {
         let viewController = FaceCropperARViewController()
         return viewController
     }
-
+    
     func updateUIViewController(_ uiViewController: FaceCropperARViewController, context: UIViewControllerRepresentableContext<FaceCropperARViewContainer>) {
-
+        
     }
     
     func makeCoordinator() -> FaceCropperARViewContainer.Coordinator {

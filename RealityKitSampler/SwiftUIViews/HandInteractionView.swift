@@ -15,14 +15,14 @@ struct HandInteractionView: View {
 }
 
 struct HandInteractionARViewContainer: UIViewControllerRepresentable {
-
+    
     func makeUIViewController(context: UIViewControllerRepresentableContext<HandInteractionARViewContainer>) -> HandInteractionARViewController {
         let viewController = HandInteractionARViewController()
         return viewController
     }
-
+    
     func updateUIViewController(_ uiViewController: HandInteractionARViewController, context: UIViewControllerRepresentableContext<HandInteractionARViewContainer>) {
-
+        
     }
     
     func makeCoordinator() -> HandInteractionARViewContainer.Coordinator {

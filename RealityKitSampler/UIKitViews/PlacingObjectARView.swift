@@ -12,7 +12,7 @@ import ARKit
 import AVFoundation
 
 class PlacingObjectARView: ARView, ARSessionDelegate {
-
+    
     var model:PlacingObjectModel!
     var resolution:CGAffineTransform?
     private var planeEntities: [UUID:ModelEntity] = [:]
@@ -24,8 +24,8 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     var materialXPan:Float = 0
     var materialYPan:Float = 0
     var twoFingerPhysicsChanged: Bool = false
-
-
+    
+    
     init(frame: CGRect, model: PlacingObjectModel) {
         super.init(frame: frame)
         self.model = model
@@ -35,11 +35,11 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
         pan.minimumNumberOfTouches = 2
         self.addGestureRecognizer(pan)
     }
-
+    
     required init?(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     required init(frame frameRect: CGRect) {
         fatalError("init(frame:) has not been implemented")
     }
@@ -51,7 +51,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
         if let entity = self.entity(at: location) as? ModelEntity, entity.physicsBody?.mode == .dynamic, !planeEntities.values.contains(entity) {
             
             entity.addForce([0,0,-100], relativeTo: nil)
-        
+            
         } else {
             
             let results = self.raycast(from: location, allowing: .estimatedPlane, alignment: .any)
@@ -114,7 +114,7 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
             print(doubleFingerGesture.rotation)
         }
     }
-
+    
     
     @objc func handlePan(sender: UIPanGestureRecognizer) {
         switch sender.state {
@@ -267,5 +267,5 @@ class PlacingObjectARView: ARView, ARSessionDelegate {
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
     }
-
+    
 }

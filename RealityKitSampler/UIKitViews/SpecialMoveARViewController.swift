@@ -11,9 +11,9 @@ import ARKit
 import Vision
 
 class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
-
+    
     private var arView: ARView!
-
+    
     var bodyAnchor:AnchorEntity = AnchorEntity()
     var handAnchor:AnchorEntity = AnchorEntity()
     var leftHandAnchor:AnchorEntity = AnchorEntity()
@@ -22,7 +22,7 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
         let cylinder = try! Energy.loadScene().cylinder?.children.first as! ModelEntity
         cylinder.model?.materials = [SimpleMaterial(color: .white, isMetallic: false)]
         cylinder.orientation = simd_quatf(angle: -90 * .pi / 180, axis: [0,0,1])
-
+        
         return cylinder
     }()
     
@@ -32,7 +32,7 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
     }()
     
     private lazy var layer:CALayer = {
-       let layer = CALayer()
+        let layer = CALayer()
         layer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.75)
         return layer
     }()
@@ -45,7 +45,7 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
         case leftHand
         case doubleHand
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         arView = ARView(frame: view.bounds)
@@ -56,7 +56,7 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
         arView.session.run(config, options: [])
         arView.scene.addAnchor(handAnchor)
         arView.scene.addAnchor(leftHandAnchor)
-
+        
     }
     
     func specialMove(specialMove:SpecialMoveType) {
@@ -67,7 +67,7 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
         let lightEntity = PointLight()
         let lightEntity2 = PointLight()
         let lightEntity3 = PointLight()
-
+        
         var direction:Float = 1
         var color:UIColor = .cyan
         
@@ -92,7 +92,7 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
             handAnchor.addChild(destinationSphere)
             handAnchor.addChild(cylinder)
             handAnchor.addChild(lightEntity)
-
+            
         }
         
         originSphere.model?.materials = [SimpleMaterial(color: color, isMetallic: false)]
@@ -101,7 +101,7 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
         originSphere.position = [-0.2*direction,0,0]
         destinationSphere.position = [-0.2*direction,0,0]
         cylinder.position = [-0.2*direction,0,0]
-
+        
         lightEntity.light.color = color
         lightEntity.light.intensity = 300000
         lightEntity.look(at: [0,0,0], from: [1*direction,0,0.3], relativeTo: lightEntity)
@@ -137,27 +137,27 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
         
         Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { timer in
             UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1, delay: 0, options: [.curveEaseInOut]) {
-                    self.arView.alpha = 0
+                self.arView.alpha = 0
+            } completion: { UIViewAnimatingPosition in
+                originSphere.isEnabled = false
+                destinationSphere.isEnabled = false
+                cylinder.isEnabled = false
+                lightEntity.isEnabled = false
+                originSphere.removeFromParent()
+                destinationSphere.removeFromParent()
+                cylinder.removeFromParent()
+                lightEntity.removeFromParent()
+                UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 2, delay: 1, options: [.curveEaseOut]) {
+                    self.arView.alpha = 1
+                    
                 } completion: { UIViewAnimatingPosition in
-                    originSphere.isEnabled = false
-                    destinationSphere.isEnabled = false
-                    cylinder.isEnabled = false
-                    lightEntity.isEnabled = false
-                    originSphere.removeFromParent()
-                    destinationSphere.removeFromParent()
-                    cylinder.removeFromParent()
-                    lightEntity.removeFromParent()
-                    UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 2, delay: 1, options: [.curveEaseOut]) {
-                        self.arView.alpha = 1
-
-                    } completion: { UIViewAnimatingPosition in
-                        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
-                            self.isSpecialMoving = false
-                        }
+                    Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                        self.isSpecialMoving = false
                     }
                 }
-                
             }
+            
+        }
     }
     
     func layerAnimation() {
@@ -192,7 +192,7 @@ class SpecialMoveARViewController: UIViewController, ARSessionDelegate {
             
             let rightMaxDistanceFromRoot = max(abs(rightHandX), abs(rightHandZ))
             let leftMaxDistanceFromRoot = max(abs(leftHandX), abs(leftHandZ))
-
+            
             if rightHandX < -0.4 || rightHandX > 0.4 || leftHandX < -0.4 || leftHandX > 0.4
                 || rightHandZ < -0.4 || rightHandZ > 0.4 || leftHandZ < -0.4 || leftHandZ > 0.4,
                !isSpecialMoving {

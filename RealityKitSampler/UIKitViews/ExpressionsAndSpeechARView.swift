@@ -13,7 +13,7 @@ import Speech
 import AVFoundation
 
 class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
-
+    
     private var speechBalloon:Entity!
     private var smileLeft:ModelEntity!
     private var smileRight:ModelEntity!
@@ -21,13 +21,13 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
     private var cheekLeft:ModelEntity!
     private var cheekRight:ModelEntity!
     private var cheekText:Entity!
-
+    
     private var speechRecognizer:SFSpeechRecognizer?
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private var audioEngine:AVAudioEngine?
     private var inputNode:AVAudioInputNode?
-
+    
     private var recognitionInitialized = false
     
     @Binding var expression: Expression
@@ -39,12 +39,12 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
         case surprise
         case naughty
     }
-        
+    
     init(frame: CGRect, expression:Binding<Expression>){
         self._expression = expression
         super.init(frame: frame)
         let config = ARFaceTrackingConfiguration()
-
+        
         session.delegate = self
         session.run(config, options: [])
         
@@ -71,7 +71,7 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
         cheekLeft.isEnabled = false
         cheekRight.isEnabled = false
         cheekText.isEnabled = false
-
+        
         startSpeechRecognition()
     }
     
@@ -104,7 +104,7 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
                 }
             }
         }
-
+        
         recognitionTask?.cancel()
         self.recognitionTask = nil
         let audioSession = AVAudioSession.sharedInstance()
@@ -115,7 +115,7 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
             print(error)
         }
         inputNode = audioEngine!.inputNode
-
+        
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         guard let recognitionRequest = recognitionRequest else { fatalError("Unable to create a SFSpeechAudioBufferRecognitionRequest object") }
         recognitionRequest.shouldReportPartialResults = true
@@ -156,7 +156,7 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
     
     
     func getCurrentText(speechText: String) {
-
+        
         print(speechText.count)
         var currentText = speechText
         switch speechText.count {
@@ -217,14 +217,14 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
                 smileLeft.isEnabled = false
                 smileRight.isEnabled = false
                 smileText.isEnabled = false
-
+                
                 cheekLeft.isEnabled = false
                 cheekRight.isEnabled = false
                 cheekText.isEnabled = false
-
+                
                 continue
             }
-                
+            
             let expression = max(smile, angry, surprise)
             
             switch expression {
@@ -233,15 +233,15 @@ class ExpressionsAndSpeechARView: ARView, ARSessionDelegate {
                 smileLeft.isEnabled = true
                 smileRight.isEnabled = true
                 smileText.isEnabled = true
-
+                
             case angry:
                 cheekLeft.isEnabled = true
                 cheekRight.isEnabled = true
                 cheekText.isEnabled = true
-
+                
             default:
                 break
-            
+                
             }
         }
     }
