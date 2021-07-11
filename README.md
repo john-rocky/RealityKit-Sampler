@@ -7,7 +7,7 @@ RealityKitSampler is the sample　collection of the basic functions of RealityKi
 
 2, Please change the "Team" field of xcode Signing and Capabilities to your account.
 
-3, Build in your actual device. This project can not be used in Simulators.
+3, Build on your actual device. This project can not be used in Simulators.
 
 ## Contents
 
@@ -41,11 +41,17 @@ How to place objects of different shapes and colors.
 
 ### Speech Balloon
 
+![Jul-10-2021 15-15-29](https://user-images.githubusercontent.com/23278992/125153880-bfd75580-e191-11eb-8b75-35b19f4da4fa.gif)
+
+
 Visualize facial expressions and what you say.
 
 ### Special Move
 
-Interact body and AR object. With CoreML.
+![Jul-10-2021 15-29-53](https://user-images.githubusercontent.com/23278992/125154167-b7801a00-e193-11eb-93c6-631e827a96ed.gif)
+
+
+Interact body and AR object.
 
 ### Face Cropper
 
@@ -58,19 +64,27 @@ Detect a face then crop.
 
 Multi Device AR Game.
 
+### Hand Interaction
+
+![Jul-10-2021 13-46-14](https://user-images.githubusercontent.com/23278992/125152071-59e4d100-e185-11eb-8f4c-e14a825ada09.gif)
+
+AR with Vision Framework.
+
 
 ## What you can learn
 
 | Content | Technical Elements |
 | ------------- | ------------- |
-| Put the box  | ARView in SwiftUI, Scene, Entity, Anchor, MeshResource, Material.  |
-| Big Robots  | USDZ, Animation  |
-| Big Monitor  | VideoMaterial, SceneEvent  |
-| Building Block | Ray Cast, Hit Test, Handle Gestures, Physics, Collision, TextureResource |
-| Speech Balloon | Face Anchor, ARSessionDelegate, Deal with RealityComposer |
-| Special Move | Body Anchor |
-| Face Cropper | Image Anchor |
-| AR Hockey | Collaborate Session |
+| **Put the box**  | ARView in SwiftUI, Scene, Entity, Anchor, MeshResource, Material.  |
+| **Big Robots**  | USDZ, Animation  |
+| **Big Monitor**  | VideoMaterial, SceneEvent  |
+| **Building Block** | Ray Cast, Hit Test, Handle Gestures, Physics, Collision, TextureResource |
+| **Speech Balloon** | Face Anchor, ARSessionDelegate, Deal with RealityComposer |
+| **Special Move** | Body Anchor |
+| **Face Cropper** | Image Anchor |
+| **AR Hockey** | Collaborative Session |
+| **Hand Interaction** | addForce, use with Vision |
+
 
 ## Author
 
