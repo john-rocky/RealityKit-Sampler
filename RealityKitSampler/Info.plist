@@ -56,7 +56,7 @@
 	<string></string>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_shoot-device._tcp</string>
+		<string>_ar-hockey._tcp</string>
 	</array>
 </dict>
 </plist>

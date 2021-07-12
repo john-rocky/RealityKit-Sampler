@@ -8,78 +8,115 @@
 import SwiftUI
 
 struct ARHockeyView: View {
-    @State var gameState: GameState?
-    @State var isHost:Bool?
+    @State var model:ARHockeyModel?
     @State var gameStateText:String = ""
     
     var body: some View {
         ZStack {
-            ShootTheDeviceARViewContainer(gameState: $gameState, isHost: $isHost)
+            ShootTheDeviceARViewContainer(model: $model)
                 .edgesIgnoringSafeArea(.all)
             VStack {
-                switch isHost {
-                case true: Text("(You) black \(gameState?.hostScore ?? 0) : \(gameState?.guestScore ?? 0) white" )
-                    .font(.system(size: 24, weight:.bold))
-                    .foregroundColor(.black)
-                case false: Text("black \(gameState?.hostScore ?? 0) : \(gameState?.guestScore ?? 0) white (You)" )
-                    .font(.system(size: 24, weight:.bold))
-                    .foregroundColor(.white)
-                default:
-                    Text("(You) black \(gameState?.hostScore ?? 0) : \(gameState?.guestScore ?? 0) white (NPC)")
-                        .font(.system(size: 24, weight:.bold))
-                        .foregroundColor(.white)
-                }
-                switch gameState?.boardAdded {
-                case true: Text("")
-                default: Text("Place board by tapping plane.")
-                }
+                getGameText()
                 Spacer()
-                if isHost == nil {
-                    Text("If an another device lauch this game, you automatically connect")
+                if model?.isHost == nil {
+                    Text("Once an another device lauch this game, you automatically connect it")
+                        .foregroundColor(.white)
                 }
             }
         }
+    }
+    
+    func getGameText() -> Text {
+        var textString: String = ""
+        var textColor: Color = .gray
+        
+        switch model?.isHost {
+        case true:
+            // host
+            switch model?.tableAdded {
+            case true:
+                // table has been added
+                switch model?.tableAddedInGuestDevice {
+                case true:
+                    // table has been shared
+                    textString = "(You) black \(model?.gameState.hostScore ?? 0) : \(model?.gameState.guestScore ?? 0) white (\(model?.connectedDeviceName ?? "other device"))"
+                    textColor = .black
+                default:
+                    // table has not been shared
+                    textString = "Move device to share the table position with \(model?.connectedDeviceName ?? "other device")"
+                }
+                
+            default:
+                // table has not been added
+                textString = "Place board by tapping plane."
+            }
+            
+        case false:
+            // guest
+            switch model?.tableAdded  {
+            case true:
+                // table has been added
+                switch model?.tableAddedInGuestDevice {
+                case true:
+                    // table has been shared
+                    textString = "(\(model?.connectedDeviceName ?? "other device")) black \(model?.gameState.hostScore ?? 0) : \(model?.gameState.guestScore ?? 0) white (You)"
+                    textColor = .white
+                    
+                default:
+                    // table has not been shared
+                    textString = "Move device to share the table position from \(model?.connectedDeviceName ?? "other device")"
+                }
+            default:
+                // table has not been added
+                textString = "Please wait the table will be added by \(model?.connectedDeviceName ?? "other device")"
+            }
+            
+        default:
+            // not connected
+            switch model?.tableAdded {
+            case true: // table added
+                textString = "(You) black \(model?.gameState.hostScore ?? 0) : \(model?.gameState.guestScore ?? 0) white (Auto)"
+                textColor = .black
+            default:
+                //no table
+                textString = "Place board by tapping plane."
+            }
+        }
+        return Text(textString)
+            .font(.system(size: 24, weight:.bold))
+            .foregroundColor(textColor)
     }
 }
 
 struct ShootTheDeviceARViewContainer: UIViewControllerRepresentable {
     
-    @Binding var gameState: GameState?
-    @Binding var isHost:Bool?
-
+    @Binding var model: ARHockeyModel?
+    
     func makeUIViewController(context: UIViewControllerRepresentableContext<ShootTheDeviceARViewContainer>) -> ARHockeyARViewController {
         let viewController = ARHockeyARViewController()
         viewController.delegate = context.coordinator
         return viewController
     }
-
+    
     func updateUIViewController(_ uiViewController: ARHockeyARViewController, context: UIViewControllerRepresentableContext<ShootTheDeviceARViewContainer>) {
-
+        
     }
     
     func makeCoordinator() -> ShootTheDeviceARViewContainer.Coordinator {
-        return Coordinator(gameState: $gameState, isHost: $isHost)
+        return Coordinator(model: $model)
     }
     
     class Coordinator: NSObject, ARHockeyARViewControllerDelegate {
         
-        @Binding var gameState: GameState!
-        @Binding var isHost:Bool?
+        @Binding var model: ARHockeyModel?
         
-        init(gameState:Binding<GameState?>, isHost: Binding<Bool?>) {
-            _gameState = gameState
-            _isHost = isHost
+        init(model:Binding<ARHockeyModel?>) {
+            _model = model
         }
         
-        func connected(isHost: Bool) {
-            self.isHost = isHost
+        func modelChanged(model: ARHockeyModel) {
+            self.model = model
         }
-        
-        func gameStateChanged(state: GameState) {
-            self.gameState = state
-        }
-        
-        
     }
 }
 struct ShootTheDeviceView_Previews: PreviewProvider {
