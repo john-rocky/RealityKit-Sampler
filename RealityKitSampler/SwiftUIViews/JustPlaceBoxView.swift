@@ -9,7 +9,7 @@ import SwiftUI
 import RealityKit
 
 struct JustPlaceBoxView: View {
-    
+
     var body: some View {
         return JustPlaceBoxARViewContainer()
             .edgesIgnoringSafeArea(.all)

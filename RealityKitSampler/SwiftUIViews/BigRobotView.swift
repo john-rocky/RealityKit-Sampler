@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BigRobotView: View {
+    @State var isActive = false
     var body: some View {
         BigRobotARViewContainer()
             .edgesIgnoringSafeArea(.all)

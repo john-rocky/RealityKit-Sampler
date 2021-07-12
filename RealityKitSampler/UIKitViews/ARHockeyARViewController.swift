@@ -121,9 +121,12 @@ class ARHockeyARViewController: UIViewController, ARSessionDelegate, MCSessionDe
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+        collisionSub.cancel()
+        animationSub.cancel()
         nonPlayerCharacterTimer?.invalidate()
         arView.session.pause()
+        session.disconnect()
+        super.viewWillDisappear(animated)
     }
     
     func setupTable() {

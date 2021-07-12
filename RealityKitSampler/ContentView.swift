@@ -9,7 +9,7 @@ import SwiftUI
 import RealityKit
 
 struct ContentView: View {
-    
+    @State var view:BigRobotView? = BigRobotView()
     var body: some View {
         NavigationView {
             VStack {
@@ -23,11 +23,13 @@ struct ContentView: View {
                                 .font(.headline)
                         })
                     NavigationLink(
-                        destination: BigRobotView(),
+                        destination: view,
                         label: {
                             Text("Big Robots")
                                 .font(.headline)
-                        })
+                        }).onDisappear {
+                            view = BigRobotView()
+                        }
                     NavigationLink(
                         destination: OneHundredInchMonitorView(),
                         label: {
@@ -73,9 +75,9 @@ struct ContentView: View {
                 }
             }.navigationBarTitle("")
             .navigationBarHidden(true)
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
-    
 }
 
 struct ContentView_Previews: PreviewProvider {

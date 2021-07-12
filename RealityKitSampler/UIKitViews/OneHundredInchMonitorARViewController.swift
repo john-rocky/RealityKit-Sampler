@@ -46,9 +46,10 @@ class OneHundredInchMonitorARViewController: UIViewController, UIImagePickerCont
         arView.addSubview(coachingOverlay)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        isActiveSub.cancel()
         player.pause()
+        super.viewWillDisappear(animated)
     }
     
     func addMonitorEntity() {

@@ -24,6 +24,10 @@ class BigRobotARViewController: UIViewController, ARCoachingOverlayViewDelegate 
         super.viewDidLoad()
         arView = ARView(frame: view.bounds)
         view.addSubview(arView)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal]
         config.environmentTexturing = .automatic
@@ -36,6 +40,17 @@ class BigRobotARViewController: UIViewController, ARCoachingOverlayViewDelegate 
         coachingOverlay.frame = arView.bounds
         arView.addSubview(coachingOverlay)
         placeRobots()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        animationEnd.cancel()
+        super.viewWillDisappear(animated)
+        arView.session.pause()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
     }
     
     private func placeRobots() {
