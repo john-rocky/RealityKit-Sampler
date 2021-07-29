@@ -22,8 +22,6 @@ The simplest way to use the ModelEntity and AnchorEntity.
 
 <img width="262" src="https://user-images.githubusercontent.com/23278992/124874290-83292400-e002-11eb-948f-13302a5806ed.gif">
 
-![Jul-08-2021 15-37-37](https://user-images.githubusercontent.com/23278992/124874290-83292400-e002-11eb-948f-13302a5806ed.gif)
-
 Use USDZ models and animations.
 
 
