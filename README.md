@@ -18,7 +18,7 @@ RealityKitSampler is the sample　collection of the basic functions of RealityKi
 The simplest way to use the ModelEntity and AnchorEntity.
 
 
-### Big Robots
+### Gigant Robots
 
 <img width="262" src="https://user-images.githubusercontent.com/23278992/124874290-83292400-e002-11eb-948f-13302a5806ed.gif">
 
