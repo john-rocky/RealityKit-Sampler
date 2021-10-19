@@ -2,6 +2,8 @@
 
 RealityKitSampler is the sample　collection of the basic functions of RealityKit.
 
+<img width="262" alt="スクリーンショット 2021-06-22 6 25 04" src="https://camo.qiitausercontent.com/a5248f768a07ce40fe23fb08f4005ce12e86d034/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e61702d6e6f727468656173742d312e616d617a6f6e6177732e636f6d2f302f3233353235392f35656636636432662d383838632d663762332d363237622d3332363737376662366130332e706e67">
+
 ## How to build
 1, Download or Clone this project and open in xcode.
 
