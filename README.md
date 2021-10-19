@@ -15,62 +15,60 @@ RealityKitSampler is the sample　collection of the basic functions of RealityKi
 
 ### Put the box
 
-<img width="262" alt="スクリーンショット 2021-06-22 6 25 04" src="https://user-images.githubusercontent.com/23278992/122830079-cc028c80-d322-11eb-87a3-8aa4803860a4.png">
+<img width="200" alt="スクリーンショット 2021-06-22 6 25 04" src="https://user-images.githubusercontent.com/23278992/122830079-cc028c80-d322-11eb-87a3-8aa4803860a4.png">
 
 The simplest way to use the ModelEntity and AnchorEntity.
 
 
 ### Gigant Robots
 
-<img width="262" src="https://user-images.githubusercontent.com/23278992/124874290-83292400-e002-11eb-948f-13302a5806ed.gif">
+<img width="200" src="https://user-images.githubusercontent.com/23278992/124874290-83292400-e002-11eb-948f-13302a5806ed.gif">
 
 Use USDZ models and animations.
 
 
 ### Big monitor
 
-![Jun-28-2021 22-09-13](https://user-images.githubusercontent.com/23278992/123641992-c8f52800-d85d-11eb-918a-4619071a54c9.gif)
+<img width="200" src="https://user-images.githubusercontent.com/23278992/123641992-c8f52800-d85d-11eb-918a-4619071a54c9.gif">
 
 How to select a video from your album and paste it as a texture.
 
 
 ### Building blocks
 
-![Jun-28-2021 22-27-24](https://user-images.githubusercontent.com/23278992/123644152-11ade080-d860-11eb-828f-68e86ac8ee28.gif)
+<img width="200" src="https://user-images.githubusercontent.com/23278992/123644152-11ade080-d860-11eb-828f-68e86ac8ee28.gif">
 
 How to place objects of different shapes and colors.
 
 
 ### Speech Balloon
 
-![Jul-10-2021 15-15-29](https://user-images.githubusercontent.com/23278992/125153880-bfd75580-e191-11eb-8b75-35b19f4da4fa.gif)
+<img width="200" src="https://user-images.githubusercontent.com/23278992/125153880-bfd75580-e191-11eb-8b75-35b19f4da4fa.gif">
 
-
-Visualize facial expressions and what you say.
+Visualiing facial expressions and what you say.
 
 ### Special Move
 
-![Jul-10-2021 15-29-53](https://user-images.githubusercontent.com/23278992/125154167-b7801a00-e193-11eb-93c6-631e827a96ed.gif)
-
+<img width="200" src="https://user-images.githubusercontent.com/23278992/125154167-b7801a00-e193-11eb-93c6-631e827a96ed.gif">
 
 Interact body and AR object.
 
 ### Face Cropper
 
-![Jul-03-2021 05-00-23](https://user-images.githubusercontent.com/23278992/124336683-e158a000-dbd9-11eb-8a00-5c2943daefcb.gif)
+<img width="200" src="https://user-images.githubusercontent.com/23278992/124336683-e158a000-dbd9-11eb-8a00-5c2943daefcb.gif">
 
 Detect a face then crop.
 
 
 ### AR Hockey
 
-![Oct-18-2021 19-29-00](https://user-images.githubusercontent.com/23278992/137721587-cc6e8235-b7a0-4fb1-ad12-4af3c1cbb5e9.gif)
+<img width="200" src="https://user-images.githubusercontent.com/23278992/137721587-cc6e8235-b7a0-4fb1-ad12-4af3c1cbb5e9.gif">
 
 Multi Device AR Game.
 
 ### Hand Interaction
 
-![Jul-10-2021 13-46-14](https://user-images.githubusercontent.com/23278992/125152071-59e4d100-e185-11eb-8f4c-e14a825ada09.gif)
+<img width="200" src="https://user-images.githubusercontent.com/23278992/125152071-59e4d100-e185-11eb-8f4c-e14a825ada09.gif">
 
 AR with Vision Framework.
 
