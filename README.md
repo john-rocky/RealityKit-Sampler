@@ -1,6 +1,6 @@
 # RealityKit-Sampler
 
-RealityKitSampler is a sample collection of basic functions of Apple's AR framework RealityKit.
+RealityKitSampler is a sample collection of basic functions of RealityKit, Apple's AR framework for iOS.
 
 <img width="200" alt="スクリーンショット 2021-06-22 6 25 04" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/235259/fe1a0cf4-eb15-83bf-1abf-7614d1cccf5a.png">
 
