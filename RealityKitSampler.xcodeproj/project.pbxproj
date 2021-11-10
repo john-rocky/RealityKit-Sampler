@@ -32,6 +32,8 @@
 		734E22EC26988BDB00509F8C /* HandInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734E22EB26988BDB00509F8C /* HandInteractionView.swift */; };
 		734E22EE26988C3E00509F8C /* HandInteractionARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734E22ED26988C3E00509F8C /* HandInteractionARViewController.swift */; };
 		734E22F02698A32600509F8C /* goal.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 734E22EF2698A32600509F8C /* goal.mp3 */; };
+		7369EF4E273B5E3C00EBF659 /* RealityFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7369EF4D273B5E3C00EBF659 /* RealityFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		7369EF50273B5E4300EBF659 /* RealityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7369EF4F273B5E4300EBF659 /* RealityKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		73F0ACD226803FE900199348 /* RealityKitSamplerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */; };
 		73F0ACD426803FE900199348 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0ACD326803FE900199348 /* ContentView.swift */; };
 		73F0ACD626803FEB00199348 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73F0ACD526803FEB00199348 /* Assets.xcassets */; };
@@ -90,6 +92,8 @@
 		734E22EB26988BDB00509F8C /* HandInteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandInteractionView.swift; sourceTree = "<group>"; };
 		734E22ED26988C3E00509F8C /* HandInteractionARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandInteractionARViewController.swift; sourceTree = "<group>"; };
 		734E22EF2698A32600509F8C /* goal.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = goal.mp3; sourceTree = "<group>"; };
+		7369EF4D273B5E3C00EBF659 /* RealityFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealityFoundation.framework; path = System/Library/Frameworks/RealityFoundation.framework; sourceTree = SDKROOT; };
+		7369EF4F273B5E4300EBF659 /* RealityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealityKit.framework; path = System/Library/Frameworks/RealityKit.framework; sourceTree = SDKROOT; };
 		73F0ACCE26803FE900199348 /* RealityKitSampler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealityKitSampler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73F0ACD126803FE900199348 /* RealityKitSamplerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealityKitSamplerApp.swift; sourceTree = "<group>"; };
 		73F0ACD326803FE900199348 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -116,6 +120,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7369EF50273B5E4300EBF659 /* RealityKit.framework in Frameworks */,
+				7369EF4E273B5E3C00EBF659 /* RealityFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,6 +177,15 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		7369EF4C273B5E3B00EBF659 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7369EF4F273B5E4300EBF659 /* RealityKit.framework */,
+				7369EF4D273B5E3C00EBF659 /* RealityFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		73F0ACC526803FE900199348 = {
 			isa = PBXGroup;
 			children = (
@@ -178,6 +193,7 @@
 				73F0ACE226803FEB00199348 /* RealityKitSamplerTests */,
 				73F0ACED26803FEB00199348 /* RealityKitSamplerUITests */,
 				73F0ACCF26803FE900199348 /* Products */,
+				7369EF4C273B5E3B00EBF659 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

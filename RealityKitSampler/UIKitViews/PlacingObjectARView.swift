@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SwiftUI
 import RealityKit
 import ARKit
 import AVFoundation

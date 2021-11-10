@@ -74,11 +74,19 @@ class BigRobotARViewController: UIViewController, ARCoachingOverlayViewDelegate 
         drummer.setScale([100,100,100], relativeTo: drummer)
         
         for animation in robot.availableAnimations {
-            robot.playAnimation(animation.repeat())
+            if #available(iOS 15.0, *) {
+                robot.playAnimation(animation.repeat())
+            } else {
+                // Fallback on earlier versions
+            }
         }
         
         for animation in drummer.availableAnimations {
-            drummer.playAnimation(animation.repeat())
+            if #available(iOS 15.0, *) {
+                drummer.playAnimation(animation.repeat())
+            } else {
+                // Fallback on earlier versions
+            }
         }
         
         robot.orientation = simd_quatf(angle: 90 * .pi / 180, axis: [0,1,0])
