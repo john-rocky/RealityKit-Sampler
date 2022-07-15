@@ -43,7 +43,7 @@ How to place objects of different shapes and colors.
 
 ### Speech Balloon
 
-<img width="200" src="https://user-images.githubusercontent.com/23278992/125153880-bfd75580-e191-11eb-8b75-35b19f4da4fa.gif">
+
 
 Visualiing facial expressions and what you say.
 
