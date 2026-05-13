@@ -1,5 +1,17 @@
 # RealityKit-Sampler
 
+**A working tour of every major RealityKit API. iPhone / iPad / visionOS.**
+
+Maintained by [Daisuke Majima](https://john-rocky.github.io) — 7+ years iOS / on-device ML / ARKit / RealityKit.
+
+📱 [Daisuke's App Store apps](https://apps.apple.com/us/developer/daisuke-majima/id1350309854) include SnapMeasure (LiDAR 3D measurement), AnimateU (image-to-video), and more.
+
+💼 **Open to Staff / Senior iOS / AR / visionOS roles** — [john-rocky.github.io](https://john-rocky.github.io) · rockyshikoku@gmail.com
+
+---
+
+# RealityKit-Sampler
+
 RealityKitSampler is a sample collection of basic functions of RealityKit, Apple's AR framework for iOS.
 
 <img width="200" alt="スクリーンショット 2021-06-22 6 25 04" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/235259/fe1a0cf4-eb15-83bf-1abf-7614d1cccf5a.png">
